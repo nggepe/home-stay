@@ -1,9 +1,13 @@
 'use client';
 
+import { Login } from '@/repositories/AuthRepository';
 import { EnvelopeClosedIcon, EyeClosedIcon, EyeOpenIcon, LockClosedIcon } from '@radix-ui/react-icons';
 import { Button, Card, Container, Heading, TextField } from '@radix-ui/themes';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/shared/ui/GlobalToast';
+import { toastError } from '@/utils/errors';
 
 interface Inputs {
   email: string;
@@ -13,9 +17,17 @@ interface Inputs {
 export default function Auth() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const { handleSubmit, register } = useForm<Inputs>();
+  const router = useRouter();
+  const toast = useToast();
 
-  const submit = (data: Inputs) => {
-    console.log(data);
+  const submit = async (data: Inputs) => {
+    try {
+      await Login(data.email, data.password);
+      toast.showToast('Login berhasil', 'success');
+      router.push('/');
+    } catch (error) {
+      toastError(error, toast);
+    }
   };
 
   return (

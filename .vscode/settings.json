@@ -32,10 +32,9 @@
       "strings": true
     },
     "editor.suggest.insertMode": "replace",
-    "gitlens.codeLens.scopes": [
-      "document"
-    ],
+    "gitlens.codeLens.scopes": ["document"],
     "editor.tabSize": 2,
     "editor.formatOnSave": true
-  }
+  },
+  "cSpell.words": ["autoincrement", "turbopack", "Yori"]
 }
