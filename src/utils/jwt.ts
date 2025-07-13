@@ -1,4 +1,4 @@
-import { jwtDecrypt, SignJWT } from 'jose';
+import { jwtVerify as joseVerify, SignJWT } from 'jose';
 
 const secret = new TextEncoder().encode(process.env.AUTH_SECRET ?? 'iypuHPka1N8JjED7fyKckfznS+az0pv7r0HQ0o8gZ9o=');
 
@@ -14,6 +14,6 @@ export const jwtSign = async (payload: { id: number }, expiresIn: string) => {
 };
 
 export const jwtVerify = async (jwt: string) => {
-  const { payload } = await jwtDecrypt(jwt, secret);
+  const { payload } = await joseVerify(jwt, secret);
   return payload;
 };
