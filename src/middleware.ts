@@ -11,6 +11,7 @@ export async function middleware(req: NextRequest) {
   }
 
   const session = req.cookies.get(JWT_COOKIE_NAME);
+  console.log(session?.value);
 
   if (!session) {
     url.pathname = '/login';
@@ -30,11 +31,15 @@ export async function middleware(req: NextRequest) {
     console.error(error);
     const refresh = req.cookies.get(JWT_REFRESH_COOKIE_NAME);
     if (refresh) {
-      const refreshPayload = await jwtVerify(refresh.value);
-      if (refreshPayload) {
-        const response = NextResponse.next();
-        response.headers.set('userId', String(refreshPayload));
-        return response;
+      try {
+        const refreshPayload = await jwtVerify(refresh.value);
+        if (refreshPayload) {
+          const response = NextResponse.next();
+          response.headers.set('userId', String(refreshPayload));
+          return response;
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
     url.pathname = '/login';
