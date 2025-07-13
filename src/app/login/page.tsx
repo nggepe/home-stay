@@ -62,6 +62,7 @@ export default function Auth() {
               <TextField.Slot>
                 <Button
                   variant="ghost"
+                  type="button"
                   onClick={() => {
                     setShowPassword(!showPassword);
                   }}
@@ -70,7 +71,9 @@ export default function Auth() {
                 </Button>
               </TextField.Slot>
             </TextField.Root>
-            <Button variant="classic">Login</Button>
+            <Button variant="classic" type="submit">
+              Login
+            </Button>
           </div>
         </form>
       </Card>
