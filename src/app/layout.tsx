@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Theme accentColor="brown" appearance="dark">
+    <Theme accentColor="brown" appearance="dark" panelBackground="translucent">
       <ToastProvider>
         <html lang="en">
           <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>

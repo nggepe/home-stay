@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { IGNORED_AUTH_PATH, JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from './configs/Constants';
-import { jwtVerify } from './utils/jwt';
+import { jwtSign, jwtVerify } from './utils/jwt';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
   }
 
   const session = req.cookies.get(JWT_COOKIE_NAME);
-  console.log(session?.value);
+  console.log('session value', session?.value);
 
   if (!session) {
     url.pathname = '/login';
@@ -21,10 +21,12 @@ export async function middleware(req: NextRequest) {
 
   try {
     const payload = await jwtVerify(session.value);
+    console.log('session payload', payload);
     if (payload) {
       const response = NextResponse.next();
 
       response.headers.set('userId', String(payload));
+
       return response;
     }
   } catch (error) {
@@ -36,6 +38,14 @@ export async function middleware(req: NextRequest) {
         if (refreshPayload) {
           const response = NextResponse.next();
           response.headers.set('userId', String(refreshPayload));
+          response.cookies.set(JWT_COOKIE_NAME, await jwtSign({ id: Number(refreshPayload) }, '2h'), {
+            path: '/',
+            secure: process.env.NODE_ENV === 'production',
+          });
+          response.cookies.set(JWT_REFRESH_COOKIE_NAME, await jwtSign({ id: Number(refreshPayload) }, '7d'), {
+            path: '/',
+            secure: process.env.NODE_ENV === 'production',
+          });
           return response;
         }
       } catch (error) {

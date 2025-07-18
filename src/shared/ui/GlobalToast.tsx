@@ -1,7 +1,7 @@
 'use client';
 
 import * as Toast from '@radix-ui/react-toast';
-import { FC, useState, useContext, createContext, ReactNode } from 'react';
+import { FC, useState, useContext, createContext, PropsWithChildren } from 'react';
 
 export type ToastVariant = 'success' | 'error';
 
@@ -17,7 +17,7 @@ export const useToast = () => {
   return ctx;
 };
 
-export const ToastProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const ToastProvider: FC<PropsWithChildren> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [variant, setVariant] = useState<ToastVariant>('success');
