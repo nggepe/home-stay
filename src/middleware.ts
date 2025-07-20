@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { IGNORED_AUTH_PATH, JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from './configs/constants--';
+import { IGNORED_AUTH_PATH, JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from './configs/constants';
 import { jwtSign, jwtVerify } from './utils/jwt';
 
 // This function can be marked `async` if using `await` inside

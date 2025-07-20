@@ -1,7 +1,7 @@
 'use server';
 
-import { JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from '@/configs/constants--';
-import { Database } from '@/configs/database-';
+import { JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from '@/configs/constants';
+import { Database } from '@/configs/database';
 import { AppError } from '@/utils/errors';
 import { jwtSign } from '@/utils/jwt';
 import bcrypt from 'bcrypt';
