@@ -1,0 +1,12 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbs a {
+  text-decoration: none;
+}
+
+.breadcrumbs a.active {
+  color: #555;
+}
