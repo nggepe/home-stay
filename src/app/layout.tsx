@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Theme } from '@radix-ui/themes';
 import '@radix-ui/themes/styles.css';
 import './globals.css';
-import { ToastProvider } from '@/shared/ui/GlobalToast';
+import { ToastProvider } from '@/shared/ui/global-toast';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

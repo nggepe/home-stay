@@ -1,12 +1,12 @@
 'use client';
 
-import { Login } from '@/repositories/AuthRepository';
+import { Login } from '@/repositories/auth-repository';
 import { EnvelopeClosedIcon, EyeClosedIcon, EyeOpenIcon, LockClosedIcon } from '@radix-ui/react-icons';
 import { Button, Card, Container, Heading, TextField } from '@radix-ui/themes';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/shared/ui/GlobalToast';
+import { useToast } from '@/shared/ui/global-toast';
 import { toastError } from '@/utils/errors';
 
 interface Inputs {

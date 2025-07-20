@@ -1,4 +1,4 @@
-import { NavigationBar } from '@/shared/ui/NavigationBar';
+import { NavigationBar } from '@/shared/ui/navigation-bar';
 import { FC, PropsWithChildren } from 'react';
 
 const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {

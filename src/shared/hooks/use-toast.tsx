@@ -1,6 +1,6 @@
 'use client';
 import { useContext } from 'react';
-import { ToastContext } from '../ui/GlobalToast';
+import { ToastContext } from '../ui/global-toast';
 
 export const useToast = () => {
   const ctx = useContext(ToastContext);
