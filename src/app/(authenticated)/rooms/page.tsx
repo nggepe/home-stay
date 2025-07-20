@@ -1,9 +1,23 @@
+import { breadCrumbItems } from '@/configs/breadcrumb-items';
+import PageHeader from '@/shared/ui/pages-header';
+import { Card } from '@radix-ui/themes';
+
+export const metadata = {
+  title: 'Rooms',
+  description: 'List of rooms available for booking',
+};
+
 const Page = () => {
   return (
-    <div>
-      <h1>Rooms Page</h1>
-      <p>Welcome to the rooms page!</p>
-    </div>
+    <>
+      <PageHeader
+        title="Rooms"
+        breadcrumbs={{
+          items: breadCrumbItems.rooms,
+        }}
+      />
+      <Card>Hello</Card>
+    </>
   );
 };
 
