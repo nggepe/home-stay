@@ -11,7 +11,6 @@ export async function middleware(req: NextRequest) {
   }
 
   const session = req.cookies.get(JWT_COOKIE_NAME);
-  console.log('session value', session?.value);
 
   if (!session) {
     url.pathname = '/login';
@@ -21,7 +20,6 @@ export async function middleware(req: NextRequest) {
 
   try {
     const payload = await jwtVerify(session.value);
-    console.log('session payload', payload);
     if (payload) {
       const response = NextResponse.next();
 

@@ -8,14 +8,17 @@ export interface PageHeaderProps {
   actions?: React.ReactNode[];
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({ title, breadcrumbs }) => {
+const PageHeader: React.FC<PageHeaderProps> = ({ title, breadcrumbs, actions }) => {
   return (
     <>
       <Head>
         <title>{title}</title>
       </Head>
       <h1 className="text-2xl font-bold mb-4 mt-3">{title}</h1>
-      {breadcrumbs && <BreadCrumbs items={breadcrumbs.items} />}
+      <div className="flex justify-between">
+        {breadcrumbs && <BreadCrumbs items={breadcrumbs.items} />}
+        <div>{actions}</div>
+      </div>
       <Separator my="3" size="4" />
     </>
   );
