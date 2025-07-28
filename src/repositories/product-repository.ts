@@ -1,22 +1,12 @@
 'use server';
 
 import { Database } from '@/configs/database';
-import { $Enums } from '@/generated/prisma';
 import { PaginationRepositoryProps, PaginationRepositoryResponse } from '@/shared/types/pagination-types';
+import { Product } from '@/shared/types/product-types';
 import { convertPageToOffset, parseListViewParams, parseNextPage, parsePrevPage } from '@/utils/parser';
 
 interface getProductsProps extends PaginationRepositoryProps {
   type?: 'ROOM' | 'SERVICE';
-}
-
-export interface Product {
-  type: $Enums.ProductType;
-  name: string;
-  price: number;
-  description?: string | null;
-  id?: number;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const getProducts = async ({
@@ -39,8 +29,6 @@ export const getProducts = async ({
     },
   });
 
-  console.log('Total products', products.length, take);
-
   return {
     data: products,
     pagination: {
@@ -54,5 +42,13 @@ export const getProducts = async ({
 export const createProduct = async (product: Product) => {
   return Database.products.create({
     data: product,
+  });
+};
+
+export const deleteProduct = async (id: number) => {
+  return Database.products.delete({
+    where: {
+      id,
+    },
   });
 };

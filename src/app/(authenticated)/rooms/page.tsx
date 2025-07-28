@@ -1,19 +1,11 @@
 import { breadCrumbItems } from '@/configs/breadcrumb-items';
 import PageHeader from '@/shared/ui/pages-header';
-import {
-  ListView,
-  ListViewAction,
-  ListViewData,
-  ListViewHeaderCell,
-  ListViewKanban,
-  ListViewPagination,
-  ListViewTable,
-} from '@/shared/ui/list-view';
+import { ListView, ListViewAction, ListViewHeaderCell, ListViewPagination } from '@/shared/ui/list-view';
 import { getProducts } from '@/repositories/product-repository';
-import { Button, Text } from '@radix-ui/themes';
+import { Button } from '@radix-ui/themes';
 import Link from 'next/link';
-import { TrashIcon } from '@radix-ui/react-icons';
 import { routes } from '@/configs/routes';
+import { RoomListView } from './(components)/room-list-view';
 
 export const metadata = {
   title: 'Rooms',
@@ -27,7 +19,6 @@ interface PageProps {
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
   const { pagination, data } = await getProducts({ ...params, type: 'ROOM' });
-  console.log(pagination);
 
   const headers: ListViewHeaderCell[] = [
     {
@@ -49,24 +40,6 @@ const Page = async ({ searchParams }: PageProps) => {
     },
   ];
 
-  const renderData: ListViewData[] = data.map((item) => ({
-    name: item.name,
-    price: (
-      <Text className="text-end w-full" as="div">
-        {item.price}
-      </Text>
-    ),
-    description: item.description,
-    action: (
-      <div className="flex justify-end">
-        <Button variant="surface" color="red">
-          <TrashIcon />
-        </Button>
-      </div>
-    ),
-    detailRoute: routes.rooms.detail(item.id!).entry,
-  }));
-
   return (
     <>
       <PageHeader
@@ -84,8 +57,7 @@ const Page = async ({ searchParams }: PageProps) => {
         <ListViewAction>
           <ListViewPagination pagination={pagination} />
         </ListViewAction>
-        <ListViewTable<ListViewData> headers={headers} data={renderData} />
-        <ListViewKanban<ListViewData> headers={headers} data={renderData} />
+        <RoomListView headers={headers} data={data} />
       </ListView>
     </>
   );

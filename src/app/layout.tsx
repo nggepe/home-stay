@@ -5,6 +5,7 @@ import '@radix-ui/themes/styles.css';
 import './globals.css';
 import { ToastProvider } from '@/shared/ui/global-toast';
 import NextTopLoader from 'nextjs-toploader';
+import { AlertDialogProvider } from '@/shared/ui/global-dialog';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,10 +31,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Theme accentColor="brown" appearance="dark" panelBackground="translucent">
-          <ToastProvider>
-            <NextTopLoader color="#CCFEBC" />
-            {children}
-          </ToastProvider>
+          <AlertDialogProvider>
+            <ToastProvider>
+              <NextTopLoader color="#CCFEBC" />
+              {children}
+            </ToastProvider>
+          </AlertDialogProvider>
         </Theme>
       </body>
     </html>

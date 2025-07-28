@@ -163,7 +163,6 @@ export type ListViewPaginationProps = Pick<PaginationRepositoryResponse<unknown>
 
 export const ListViewPagination: FC<ListViewPaginationProps> = ({ pagination, ...props }) => {
   const params = useSearchParams();
-  console.log('params', params);
   const router = useRouter();
 
   const goToNext = () => {
