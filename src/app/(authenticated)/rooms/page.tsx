@@ -12,6 +12,8 @@ import {
 import { getProducts } from '@/repositories/product-repository';
 import { Button, Text } from '@radix-ui/themes';
 import Link from 'next/link';
+import { TrashIcon } from '@radix-ui/react-icons';
+import { routes } from '@/configs/routes';
 
 export const metadata = {
   title: 'Rooms',
@@ -24,8 +26,8 @@ interface PageProps {
 
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
-  console.log('you found search params', params);
   const { pagination, data } = await getProducts({ ...params, type: 'ROOM' });
+  console.log(pagination);
 
   const headers: ListViewHeaderCell[] = [
     {
@@ -41,6 +43,10 @@ const Page = async ({ searchParams }: PageProps) => {
       key: 'description',
       label: 'Description',
     },
+    {
+      key: 'action',
+      label: '',
+    },
   ];
 
   const renderData: ListViewData[] = data.map((item) => ({
@@ -51,6 +57,14 @@ const Page = async ({ searchParams }: PageProps) => {
       </Text>
     ),
     description: item.description,
+    action: (
+      <div className="flex justify-end">
+        <Button variant="surface" color="red">
+          <TrashIcon />
+        </Button>
+      </div>
+    ),
+    detailRoute: routes.rooms.detail(item.id!).entry,
   }));
 
   return (
@@ -61,7 +75,7 @@ const Page = async ({ searchParams }: PageProps) => {
           items: breadCrumbItems.rooms,
         }}
         actions={[
-          <Link href={'/rooms/create'} key={'create'}>
+          <Link href={routes.rooms.create.entry()} key={'create'}>
             <Button variant="classic">New Room</Button>
           </Link>,
         ]}

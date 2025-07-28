@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Button, Card, Table as RadixTable, Text, TextField } from '@radix-ui/themes';
+import { Button, Card, Table as RadixTable, Separator, Text, TextField } from '@radix-ui/themes';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FC, HtmlHTMLAttributes, PropsWithChildren, ReactNode } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
@@ -16,7 +16,10 @@ export interface ListViewHeaderCell {
   orderable?: boolean;
 }
 
-export type ListViewData = Record<string, ReactNode>;
+export type ListViewData = Record<string, ReactNode> & {
+  action?: ReactNode;
+  detailRoute?: string;
+};
 
 // Props for ListView, generic over Data
 export interface ListViewProps<Data extends ListViewData = ListViewData> {
@@ -32,6 +35,7 @@ export const ListView: FC<PropsWithChildren> = ({ children }) => {
 // Table version of the list view
 export const ListViewTable = <Data extends ListViewData>(props: ListViewProps<Data>) => {
   const { headers } = props;
+  const router = useRouter();
 
   return (
     <RadixTable.Root variant="surface" className="hidden lg:block">
@@ -47,9 +51,20 @@ export const ListViewTable = <Data extends ListViewData>(props: ListViewProps<Da
       <RadixTable.Body>
         {props.data.map((row, index) => {
           return (
-            <RadixTable.Row key={index}>
+            <RadixTable.Row key={index} className={row.detailRoute ? 'hover:bg-[#0000004d]' : ''}>
               {headers.map((header) => {
-                return <RadixTable.Cell key={header.key}>{row[header.key]}</RadixTable.Cell>;
+                if (header.key === 'action') {
+                  return <RadixTable.Cell key={header.key}>{row[header.key]}</RadixTable.Cell>;
+                }
+                return (
+                  <RadixTable.Cell
+                    className={row.detailRoute ? 'cursor-pointer' : ''}
+                    onClick={() => row.detailRoute && router.push(row.detailRoute)}
+                    key={header.key}
+                  >
+                    {row[header.key]}
+                  </RadixTable.Cell>
+                );
               })}
             </RadixTable.Row>
           );
@@ -60,6 +75,7 @@ export const ListViewTable = <Data extends ListViewData>(props: ListViewProps<Da
 };
 
 export const ListViewKanban = <Data extends ListViewData>(props: ListViewProps<Data>) => {
+  const router = useRouter();
   if (props.data.length === 0) {
     return (
       <Card className="py-6 w-full">
@@ -74,10 +90,13 @@ export const ListViewKanban = <Data extends ListViewData>(props: ListViewProps<D
     <div className="block lg:hidden">
       {props.data.map((item, index) => {
         return (
-          <Card key={index}>
-            <table className="w-full">
+          <Card key={index} className="mb-3">
+            <table className="w-full" onClick={() => item.detailRoute && router.push(item.detailRoute)}>
               <tbody>
                 {props.headers.map((header) => {
+                  if (header.key == 'action') {
+                    return null;
+                  }
                   return (
                     <tr key={header.key}>
                       <td className="text-start">{header.label}</td>
@@ -87,6 +106,12 @@ export const ListViewKanban = <Data extends ListViewData>(props: ListViewProps<D
                 })}
               </tbody>
             </table>
+            {item.action && (
+              <>
+                <Separator className="w-full" my="3" size={'4'} />
+                <div className="flex justify-end">{item.action}</div>
+              </>
+            )}
           </Card>
         );
       })}
@@ -137,13 +162,29 @@ export type ListViewPaginationProps = Pick<PaginationRepositoryResponse<unknown>
   HtmlHTMLAttributes<HTMLDivElement>;
 
 export const ListViewPagination: FC<ListViewPaginationProps> = ({ pagination, ...props }) => {
+  const params = useSearchParams();
+  console.log('params', params);
+  const router = useRouter();
+
+  const goToNext = () => {
+    const searchParams = new URLSearchParams(params);
+    searchParams.set('page', pagination.next?.toString() || '1');
+    router.push(`?${searchParams.toString()}`);
+  };
+
+  const goToPrev = () => {
+    const searchParams = new URLSearchParams(params);
+    searchParams.set('page', pagination.prev?.toString() || '1');
+    router.push(`?${searchParams.toString()}`);
+  };
+
   return (
     <div {...props} className={`flex justify-end gap-3 items-center ${props.className || ''}`}>
-      <Button variant="soft" disabled={pagination.prev === undefined}>
+      <Button variant="soft" disabled={pagination.prev === undefined} onClick={goToPrev}>
         <ChevronLeftIcon />
       </Button>
       {<Text>{pagination.page}</Text>}
-      <Button variant="soft" disabled={pagination.next === undefined}>
+      <Button variant="soft" disabled={pagination.next === undefined} onClick={goToNext}>
         <ChevronRightIcon />
       </Button>
     </div>

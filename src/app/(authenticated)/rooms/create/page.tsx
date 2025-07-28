@@ -1,5 +1,6 @@
 import PageHeader from '@/shared/ui/pages-header';
 import { CreateRoomForm } from './form';
+import { breadCrumbItems } from '@/configs/breadcrumb-items';
 
 export const metadata = {
   title: 'Create Room',
@@ -9,16 +10,7 @@ export const metadata = {
 const CreateRoomPage = () => {
   return (
     <>
-      <PageHeader
-        title="Create Room"
-        breadcrumbs={{
-          items: [
-            { label: 'Home', href: '/' },
-            { label: 'Rooms', href: '/rooms' },
-            { label: 'Create Room', href: '/rooms/create', active: true },
-          ],
-        }}
-      />
+      <PageHeader title="Create Room" breadcrumbs={{ items: breadCrumbItems.createRoom }} />
       <section>
         <CreateRoomForm />
       </section>

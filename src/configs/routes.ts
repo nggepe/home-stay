@@ -4,5 +4,11 @@ export const routes = {
   },
   rooms: {
     entry: () => '/rooms',
+    create: {
+      entry: () => '/rooms/create',
+    },
+    detail: (id: number) => ({
+      entry: `/rooms/${id}`,
+    }),
   },
 };

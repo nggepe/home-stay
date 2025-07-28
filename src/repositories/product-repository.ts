@@ -3,7 +3,7 @@
 import { Database } from '@/configs/database';
 import { $Enums } from '@/generated/prisma';
 import { PaginationRepositoryProps, PaginationRepositoryResponse } from '@/shared/types/pagination-types';
-import { parseListViewParams } from '@/utils/params';
+import { convertPageToOffset, parseListViewParams, parseNextPage, parsePrevPage } from '@/utils/parser';
 
 interface getProductsProps extends PaginationRepositoryProps {
   type?: 'ROOM' | 'SERVICE';
@@ -25,21 +25,28 @@ export const getProducts = async ({
 }: getProductsProps): Promise<PaginationRepositoryResponse<Product>> => {
   const { page, limit, search } = parseListViewParams({ ...props });
   const take = limit || 10;
+  const skip = convertPageToOffset(page, limit);
+
   const products = await Database.products.findMany({
     where: {
       type,
-      name: search ? { contains: search } : undefined,
+      name: search ? { contains: search, mode: 'insensitive' } : undefined,
     },
     take: take,
-    skip: ((page || 1) - 1) * take,
+    skip: skip,
+    orderBy: {
+      id: 'desc',
+    },
   });
+
+  console.log('Total products', products.length, take);
 
   return {
     data: products,
     pagination: {
       page: String(page || 1),
-      next: products.length === limit ? page ?? Number(page) + 1 : undefined,
-      prev: page ? page - 1 : undefined,
+      next: parseNextPage(page, products.length !== take),
+      prev: parsePrevPage(page),
     },
   };
 };
