@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { FC, HtmlHTMLAttributes, PropsWithChildren, ReactNode } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 import { PaginationRepositoryResponse } from '../types/pagination-types';
+import Image from 'next/image';
 
 // Header cell interface
 export interface ListViewHeaderCell {
@@ -59,18 +60,28 @@ export const ListViewTable = <Data extends ListViewData>(props: ListViewProps<Da
 };
 
 export const ListViewKanban = <Data extends ListViewData>(props: ListViewProps<Data>) => {
+  if (props.data.length === 0) {
+    return (
+      <Card className="py-6 w-full">
+        <Image width={250} height={250} src={'/no-data.svg'} alt="no data" className="mx-auto" />
+        <Text align={'center'} size={'6'} as="div" className="m-5">
+          No data available
+        </Text>
+      </Card>
+    );
+  }
   return (
     <div className="block lg:hidden">
       {props.data.map((item, index) => {
         return (
           <Card key={index}>
-            <table>
+            <table className="w-full">
               <tbody>
                 {props.headers.map((header) => {
                   return (
                     <tr key={header.key}>
-                      <th>{header.label}</th>
-                      <td>{item[header.key]}</td>
+                      <td className="text-start">{header.label}</td>
+                      <th className="text-end">{item[header.key]}</th>
                     </tr>
                   );
                 })}

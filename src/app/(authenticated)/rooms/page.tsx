@@ -10,7 +10,7 @@ import {
   ListViewTable,
 } from '@/shared/ui/list-view';
 import { getProducts } from '@/repositories/product-repository';
-import { Button } from '@radix-ui/themes';
+import { Button, Text } from '@radix-ui/themes';
 import Link from 'next/link';
 
 export const metadata = {
@@ -45,7 +45,11 @@ const Page = async ({ searchParams }: PageProps) => {
 
   const renderData: ListViewData[] = data.map((item) => ({
     name: item.name,
-    price: item.price,
+    price: (
+      <Text className="text-end w-full" as="div">
+        {item.price}
+      </Text>
+    ),
     description: item.description,
   }));
 

@@ -1,3 +1,5 @@
+'use server';
+
 import { Database } from '@/configs/database';
 import { $Enums } from '@/generated/prisma';
 import { PaginationRepositoryProps, PaginationRepositoryResponse } from '@/shared/types/pagination-types';
@@ -11,8 +13,8 @@ export interface Product {
   type: $Enums.ProductType;
   name: string;
   price: number;
-  description: string;
-  id: number;
+  description?: string | null;
+  id?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,4 +42,10 @@ export const getProducts = async ({
       prev: page ? page - 1 : undefined,
     },
   };
+};
+
+export const createProduct = async (product: Product) => {
+  return Database.products.create({
+    data: product,
+  });
 };

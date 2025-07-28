@@ -30,7 +30,7 @@ model products {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   type        ProductType
-  description String
+  description String?     @db.Text
 }
 
 enum ProductType {
