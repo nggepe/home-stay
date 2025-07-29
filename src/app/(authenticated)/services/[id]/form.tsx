@@ -14,12 +14,12 @@ type ProductForm = {
   price: number;
 };
 
-interface UpdateRoomFormProps {
+interface UpdateServiceFormProps {
   id: number;
   defaultValue: ProductForm;
 }
 
-export const UpdateRoomForm = ({ id, defaultValue }: UpdateRoomFormProps) => {
+export const UpdateServiceForm = ({ id, defaultValue }: UpdateServiceFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
   const router = useRouter();
@@ -37,12 +37,12 @@ export const UpdateRoomForm = ({ id, defaultValue }: UpdateRoomFormProps) => {
       price: Number(data.price),
       createdAt: new Date(),
       updatedAt: new Date(),
-      type: 'ROOM',
+      type: 'SERVICE',
       description: data.description,
     });
     setIsSubmitting(false);
-    showToast('Room created successfully', 'success');
-    router.push(routes.rooms.entry());
+    showToast('Service created successfully', 'success');
+    router.push(routes.services.entry());
   };
 
   return (

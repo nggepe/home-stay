@@ -1,7 +1,7 @@
 'use client';
 
 import { routes } from '@/configs/routes';
-import { updateProduct } from '@/repositories/product-repository';
+import { createProduct } from '@/repositories/product-repository';
 import FormGroup from '@/shared/ui/forms/form-group';
 import { useToast } from '@/shared/ui/providers/global-toast';
 import { Box, Button, Card, Grid, TextArea, TextField } from '@radix-ui/themes';
@@ -14,12 +14,7 @@ type ProductForm = {
   price: number;
 };
 
-interface UpdateRoomFormProps {
-  id: number;
-  defaultValue: ProductForm;
-}
-
-export const UpdateRoomForm = ({ id, defaultValue }: UpdateRoomFormProps) => {
+export const CreateServiceForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
   const router = useRouter();
@@ -28,21 +23,21 @@ export const UpdateRoomForm = ({ id, defaultValue }: UpdateRoomFormProps) => {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<ProductForm>({ defaultValues: defaultValue });
+  } = useForm<ProductForm>();
 
   const handleOnSubmit = async (data: ProductForm) => {
     setIsSubmitting(true);
-    await updateProduct(id, {
+    await createProduct({
       name: data.name,
       price: Number(data.price),
       createdAt: new Date(),
       updatedAt: new Date(),
-      type: 'ROOM',
+      type: 'SERVICE',
       description: data.description,
     });
     setIsSubmitting(false);
-    showToast('Room created successfully', 'success');
-    router.push(routes.rooms.entry());
+    showToast('Service created successfully', 'success');
+    router.push(routes.services.entry());
   };
 
   return (
