@@ -90,4 +90,30 @@ export const breadCrumbItems = {
       active: true,
     },
   ],
+  sales: [
+    {
+      href: routes.home.entry(),
+      label: 'Home',
+    },
+    {
+      href: routes.sales.entry(),
+      label: 'Sales',
+      active: true,
+    },
+  ],
+  createSales: [
+    {
+      href: routes.home.entry(),
+      label: 'Home',
+    },
+    {
+      href: routes.sales.entry(),
+      label: 'Sales',
+    },
+    {
+      href: routes.sales.create.entry(),
+      label: 'Create Sales',
+      active: true,
+    },
+  ],
 };

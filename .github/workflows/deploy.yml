@@ -1,0 +1,84 @@
+name: Deployment
+
+on:
+  push:
+    branches: ['master']
+
+jobs:
+  ci-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'npm'
+      - run: npm install
+      - name: Build app with .env
+        run: |
+          echo APP_MODE=dev >> .env
+          echo PM2_PORT=${{ secrets.PM2_PORT_DEV }} >> .env
+          echo AUTH_SECRET=${{ secrets.AUTH_SECRET }} >> .env
+          echo DATABASE_URL=${{ secrets.DATABASE_URL_DEV }} >> .env
+          npm run build
+      - name: copy file to server
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          password: ${{ secrets.PASSWORD }}
+          source: './.next/./'
+          target: '/home/hs32.gepcode.com/tempdir'
+      - name: copy package-lock.json to server
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          password: ${{ secrets.PASSWORD }}
+          source: 'package-lock.json'
+          target: '/home/hs32.gepcode.com'
+  rebase-install:
+    runs-on: ubuntu-latest
+    needs: ci-build
+    steps:
+      - name: setup ssh
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USERNAME}}
+          password: ${{secrets.PASSWORD}}
+          port: ${{secrets.PORT}}
+          script: |
+            cd /home/hs32.gepcode.com/home-stay
+            rm -r .next
+            mv /home/hs32.gepcode.com/tempdir/.next /home/hs32.gepcode.com/home-stay
+            cd /home/hs32.gepcode.com/home-stay
+            git checkout master
+            git pull
+            rm package-lock.json
+            PATH=/root/.nvm/versions/node/v18.20.3/bin:$PATH
+            npm install
+            npx prisma migrate deploy
+            npx prisma generate
+            npx prisma db seed -- --mode="dummy"
+            pm2 restart home-stay
+            exit
+  move-package-lock:
+    runs-on: ubuntu-latest
+    needs: rebase-install
+    steps:
+      - name: setup ssh
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USERNAME}}
+          password: ${{secrets.PASSWORD}}
+          port: ${{secrets.PORT}}
+          script: |
+            cd /home/hs32.gepcode.com/home-stay
+            rm package-lock.json
+            cd /home/hs32.gepcode.com
+            mv package-lock.json /home/hs32.gepcode.com/home-stay
