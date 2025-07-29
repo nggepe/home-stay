@@ -20,4 +20,13 @@ export const routes = {
       entry: `/services/${id}`,
     }),
   },
+  sales: {
+    entry: () => '/sales',
+    create: {
+      entry: () => '/sales/create',
+    },
+    detail: (id: number) => ({
+      entry: `/sales/${id}`,
+    }),
+  },
 };
