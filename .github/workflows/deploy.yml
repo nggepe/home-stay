@@ -59,7 +59,7 @@ jobs:
             git checkout main
             git pull
             rm package-lock.json
-            PATH=/root/.nvm/versions/node/v18.20.3/bin:$PATH
+            PATH=/root/.nvm/versions/node/v20.18.0/bin:$PATH
             npm install
             npx prisma migrate deploy
             npx prisma generate
