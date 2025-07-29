@@ -56,7 +56,7 @@ jobs:
             rm -r .next
             mv /home/hs32.gepcode.com/tempdir/.next /home/hs32.gepcode.com/home-stay
             cd /home/hs32.gepcode.com/home-stay
-            git checkout master
+            git checkout main
             git pull
             rm package-lock.json
             PATH=/root/.nvm/versions/node/v18.20.3/bin:$PATH
