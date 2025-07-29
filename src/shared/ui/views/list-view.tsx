@@ -5,7 +5,7 @@ import { Button, Card, Table as RadixTable, Separator, Text, TextField } from '@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FC, HtmlHTMLAttributes, PropsWithChildren, ReactNode } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
-import { PaginationRepositoryResponse } from '../types/pagination-types';
+import { PaginationRepositoryResponse } from '../../types/pagination-types';
 import Image from 'next/image';
 
 // Header cell interface
@@ -28,8 +28,17 @@ export interface ListViewProps<Data extends ListViewData = ListViewData> {
 }
 
 // ListView component (generic)
-export const ListView: FC<PropsWithChildren> = ({ children }) => {
+export const ListViewWrapper: FC<PropsWithChildren> = ({ children }) => {
   return <div>{children}</div>; // You can replace this with <ListViewKanban /> if needed
+};
+
+export const ListView = <Data extends ListViewData>(props: ListViewProps<Data>) => {
+  return (
+    <>
+      <ListViewTable {...props} />
+      <ListViewKanban {...props} />
+    </>
+  );
 };
 
 // Table version of the list view

@@ -3,9 +3,9 @@
 import { routes } from '@/configs/routes';
 import { deleteProduct } from '@/repositories/product-repository';
 import { Product } from '@/shared/types/product-types';
-import { ButtonDelete } from '@/shared/ui/buttons';
-import { useToast } from '@/shared/ui/global-toast';
-import { ListViewData, ListViewHeaderCell, ListViewKanban, ListViewTable } from '@/shared/ui/list-view';
+import { ButtonDelete } from '@/shared/ui/buttons/buttons';
+import { useToast } from '@/shared/ui/providers/global-toast';
+import { ListView, ListViewData, ListViewHeaderCell } from '@/shared/ui/views/list-view';
 import { Text } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
@@ -49,8 +49,7 @@ export const RoomListView: FC<RoomListViewProps> = ({ headers, data }) => {
   }));
   return (
     <>
-      <ListViewTable<ListViewData> headers={headers} data={renderData} />
-      <ListViewKanban<ListViewData> headers={headers} data={renderData} />
+      <ListView<ListViewData> headers={headers} data={renderData} />
     </>
   );
 };

@@ -3,9 +3,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Theme } from '@radix-ui/themes';
 import '@radix-ui/themes/styles.css';
 import './globals.css';
-import { ToastProvider } from '@/shared/ui/global-toast';
+import { ToastProvider } from '@/shared/ui/providers/global-toast';
 import NextTopLoader from 'nextjs-toploader';
-import { AlertDialogProvider } from '@/shared/ui/global-dialog';
+import { AlertDialogProvider } from '@/shared/ui/providers/global-dialog';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

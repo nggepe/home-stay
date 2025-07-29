@@ -6,7 +6,7 @@ import { Button, Card, Container, Heading, TextField } from '@radix-ui/themes';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/shared/ui/global-toast';
+import { useToast } from '@/shared/ui/providers/global-toast';
 import { toastError } from '@/utils/errors';
 
 interface Inputs {

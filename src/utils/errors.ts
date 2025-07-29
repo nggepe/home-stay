@@ -1,4 +1,4 @@
-import { ToastContextProps } from '@/shared/ui/global-toast';
+import { ToastContextProps } from '@/shared/ui/providers/global-toast';
 
 export class AppError extends Error {
   constructor(message: string, public code?: string) {

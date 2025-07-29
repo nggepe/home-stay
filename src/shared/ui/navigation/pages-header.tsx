@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import BreadCrumbs, { BreadCrumbsProps } from './breadcrumbs';
+import BreadCrumbs, { BreadCrumbsProps } from '../breadcrumbs/breadcrumbs';
 import { Separator } from '@radix-ui/themes';
 
 export interface PageHeaderProps {

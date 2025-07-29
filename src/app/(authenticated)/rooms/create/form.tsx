@@ -1,8 +1,8 @@
 'use client';
 
 import { createProduct } from '@/repositories/product-repository';
-import FormGroup from '@/shared/ui/form-group';
-import { useToast } from '@/shared/ui/global-toast';
+import FormGroup from '@/shared/ui/forms/form-group';
+import { useToast } from '@/shared/ui/providers/global-toast';
 import { Box, Button, Card, Grid, TextArea, TextField } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

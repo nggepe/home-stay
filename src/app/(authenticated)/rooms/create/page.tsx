@@ -1,4 +1,4 @@
-import PageHeader from '@/shared/ui/pages-header';
+import PageHeader from '@/shared/ui/navigation/pages-header';
 import { CreateRoomForm } from './form';
 import { breadCrumbItems } from '@/configs/breadcrumb-items';
 

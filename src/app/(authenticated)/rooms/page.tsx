@@ -1,6 +1,6 @@
 import { breadCrumbItems } from '@/configs/breadcrumb-items';
-import PageHeader from '@/shared/ui/pages-header';
-import { ListView, ListViewAction, ListViewHeaderCell, ListViewPagination } from '@/shared/ui/list-view';
+import PageHeader from '@/shared/ui/navigation/pages-header';
+import { ListViewAction, ListViewHeaderCell, ListViewPagination, ListViewWrapper } from '@/shared/ui/views/list-view';
 import { getProducts } from '@/repositories/product-repository';
 import { Button } from '@radix-ui/themes';
 import Link from 'next/link';
@@ -53,12 +53,12 @@ const Page = async ({ searchParams }: PageProps) => {
           </Link>,
         ]}
       />
-      <ListView>
+      <ListViewWrapper>
         <ListViewAction>
           <ListViewPagination pagination={pagination} />
         </ListViewAction>
         <RoomListView headers={headers} data={data} />
-      </ListView>
+      </ListViewWrapper>
     </>
   );
 };

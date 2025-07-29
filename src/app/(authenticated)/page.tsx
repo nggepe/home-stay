@@ -1,6 +1,6 @@
 'use client';
 
-import DashboardMenu from '@/shared/ui/dashboard-menu';
+import DashboardMenu from '@/shared/ui/navigation/dashboard-menu';
 
 export default function Home() {
   return (

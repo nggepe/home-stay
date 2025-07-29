@@ -1,6 +1,6 @@
 import { breadCrumbItems } from '@/configs/breadcrumb-items';
 import { getProduct } from '@/repositories/product-repository';
-import PageHeader from '@/shared/ui/pages-header';
+import PageHeader from '@/shared/ui/navigation/pages-header';
 import { UpdateRoomForm } from './form';
 
 export const metadata = {
