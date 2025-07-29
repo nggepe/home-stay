@@ -1,5 +1,6 @@
 'use client';
 
+import { routes } from '@/configs/routes';
 import { createProduct } from '@/repositories/product-repository';
 import FormGroup from '@/shared/ui/forms/form-group';
 import { useToast } from '@/shared/ui/providers/global-toast';
@@ -36,7 +37,7 @@ export const CreateRoomForm = () => {
     });
     setIsSubmitting(false);
     showToast('Room created successfully', 'success');
-    router.push('/rooms');
+    router.push(routes.rooms.entry());
   };
 
   return (

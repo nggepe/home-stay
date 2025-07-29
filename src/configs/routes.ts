@@ -11,4 +11,13 @@ export const routes = {
       entry: `/rooms/${id}`,
     }),
   },
+  services: {
+    entry: () => '/services',
+    create: {
+      entry: () => '/services/create',
+    },
+    detail: (id: number) => ({
+      entry: `/services/${id}`,
+    }),
+  },
 };

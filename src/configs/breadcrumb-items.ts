@@ -49,4 +49,45 @@ export const breadCrumbItems = {
       active: true,
     },
   ],
+  services: [
+    {
+      href: routes.home.entry(),
+      label: 'Home',
+    },
+    {
+      href: routes.services.entry(),
+      label: 'Services',
+      active: true,
+    },
+  ],
+  createService: [
+    {
+      href: routes.home.entry(),
+      label: 'Home',
+    },
+    {
+      href: routes.services.entry(),
+      label: 'Services',
+    },
+    {
+      href: routes.services.create.entry(),
+      label: 'Create Service',
+      active: true,
+    },
+  ],
+  detailService: (id: number, name: string) => [
+    {
+      href: routes.home.entry(),
+      label: 'Home',
+    },
+    {
+      href: routes.services.entry(),
+      label: 'Services',
+    },
+    {
+      href: routes.services.detail(id).entry,
+      label: name,
+      active: true,
+    },
+  ],
 };

@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { Avatar, Button, DropdownMenu } from '@radix-ui/themes';
 import { Logout } from '@/repositories/auth-repository';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { routes } from '@/configs/routes';
 
 const Profile = () => {
   const router = useRouter();
@@ -33,14 +35,16 @@ export const NavigationBar = () => {
       <div className={css.mainNavigation}>
         <div className="mx-auto flex justify-between h-full py-0 my-0 px-7">
           <div className="flex items-center h-full gap-6">
-            <Image
-              priority={false}
-              src="/android-chrome-192x192.png"
-              alt="logo"
-              width={192}
-              height={192}
-              className="w-10 h-10"
-            />
+            <Link href={routes.home.entry()}>
+              <Image
+                priority={false}
+                src="/android-chrome-192x192.png"
+                alt="logo"
+                width={192}
+                height={192}
+                className="w-10 h-10"
+              />
+            </Link>
           </div>
           <div className="flex items-center h-full">
             <Profile />
