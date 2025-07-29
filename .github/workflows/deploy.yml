@@ -63,7 +63,7 @@ jobs:
             npm install
             npx prisma migrate deploy
             npx prisma generate
-            npx prisma db seed -- --mode="dummy"
+            npx prisma db seed
             pm2 restart home-stay
             exit
   move-package-lock:
