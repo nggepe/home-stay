@@ -52,3 +52,20 @@ export const deleteProduct = async (id: number) => {
     },
   });
 };
+
+export const getProduct = async (id: number) => {
+  return Database.products.findUnique({
+    where: {
+      id,
+    },
+  });
+};
+
+export const updateProduct = async (id: number, product: Product) => {
+  return Database.products.update({
+    where: {
+      id,
+    },
+    data: product,
+  });
+};
