@@ -33,7 +33,7 @@ export default function Auth() {
   return (
     <Container size={'1'} className="h-full flex-col items-center justify-center">
       <Card>
-        <form onSubmit={handleSubmit(submit)}>
+        <form onSubmit={handleSubmit(submit)} autoComplete="on">
           <Heading as="h1" className="text-center">
             Login
           </Heading>
@@ -44,6 +44,7 @@ export default function Auth() {
               type="email"
               required
               autoComplete="username"
+              name="email"
             >
               <TextField.Slot>
                 <EnvelopeClosedIcon />
@@ -55,6 +56,7 @@ export default function Auth() {
               type={showPassword ? 'text' : 'password'}
               required
               autoComplete="current-password"
+              name="password"
             >
               <TextField.Slot>
                 <LockClosedIcon />

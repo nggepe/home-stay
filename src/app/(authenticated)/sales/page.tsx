@@ -1,6 +1,6 @@
 import { breadCrumbItems } from '@/configs/breadcrumb-items';
 import { routes } from '@/configs/routes';
-import { Autocomplete } from '@/shared/ui/autocomplete/autocomplete';
+import { AutocompleteRoom } from '@/shared/ui/autocomplete/autocomplete-room';
 import PageHeader from '@/shared/ui/navigation/pages-header';
 import { Button } from '@radix-ui/themes';
 import Link from 'next/link';
@@ -24,7 +24,7 @@ const SalesPage = () => {
           </Link>,
         ]}
       />
-      <Autocomplete />
+      <AutocompleteRoom />
     </>
   );
 };
