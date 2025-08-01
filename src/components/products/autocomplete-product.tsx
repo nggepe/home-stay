@@ -1,7 +1,7 @@
 'use client';
 
 import { getProducts } from '@/repositories/product-repository';
-import { Autocomplete } from './autocomplete';
+import { Autocomplete } from '../../shared/ui/autocomplete/autocomplete';
 import { Product } from '@/shared/types/product-types';
 
 type AutocompleteData = Product & { display: string };
