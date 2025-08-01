@@ -1,6 +1,5 @@
-import { breadCrumbItems } from '@/configs/breadcrumb-items';
 import { routes } from '@/configs/routes';
-import { AutocompleteRoom } from '@/shared/ui/autocomplete/autocomplete-room';
+import { AutocompleteProduct } from '@/shared/ui/autocomplete/autocomplete-product';
 import PageHeader from '@/shared/ui/navigation/pages-header';
 import { Button } from '@radix-ui/themes';
 import Link from 'next/link';
@@ -16,7 +15,17 @@ const SalesPage = () => {
       <PageHeader
         title="Services"
         breadcrumbs={{
-          items: breadCrumbItems.sales,
+          items: [
+            {
+              label: 'Home',
+              href: routes.home.entry(),
+            },
+            {
+              label: 'Sales',
+              href: routes.sales.entry(),
+              active: true,
+            },
+          ],
         }}
         actions={[
           <Link href={routes.sales.create.entry()} key={'create'}>
@@ -24,7 +33,7 @@ const SalesPage = () => {
           </Link>,
         ]}
       />
-      <AutocompleteRoom />
+      <AutocompleteProduct />
     </>
   );
 };

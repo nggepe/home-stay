@@ -1,6 +1,6 @@
 import PageHeader from '@/shared/ui/navigation/pages-header';
 import { CreateServiceForm } from './form';
-import { breadCrumbItems } from '@/configs/breadcrumb-items';
+import { routes } from '@/configs/routes';
 
 export const metadata = {
   title: 'Create Service',
@@ -10,7 +10,16 @@ export const metadata = {
 const CreateServicePage = () => {
   return (
     <>
-      <PageHeader title="Create Service" breadcrumbs={{ items: breadCrumbItems.createService }} />
+      <PageHeader
+        title="Create Service"
+        breadcrumbs={{
+          items: [
+            { label: 'Home', href: routes.home.entry() },
+            { label: 'Services', href: routes.services.entry() },
+            { label: 'Create Service', href: routes.services.create.entry() },
+          ],
+        }}
+      />
       <section>
         <CreateServiceForm />
       </section>

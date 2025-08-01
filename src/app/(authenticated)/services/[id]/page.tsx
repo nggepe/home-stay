@@ -1,7 +1,7 @@
-import { breadCrumbItems } from '@/configs/breadcrumb-items';
 import { getProduct } from '@/repositories/product-repository';
 import PageHeader from '@/shared/ui/navigation/pages-header';
 import { UpdateServiceForm } from './form';
+import { routes } from '@/configs/routes';
 
 export const metadata = {
   title: 'Room Details',
@@ -23,7 +23,13 @@ const RoomDetailsPage = async ({ params }: RoomDetailsPageProps) => {
     <>
       <PageHeader
         title={room?.name ?? '-'}
-        breadcrumbs={{ items: breadCrumbItems.detailRoom(Number(id), room?.name ?? '-') }}
+        breadcrumbs={{
+          items: [
+            { label: 'Home', href: routes.home.entry() },
+            { label: 'Services', href: routes.services.entry() },
+            { label: room?.name ?? '-', href: routes.services.detail(Number(id)).entry, active: true },
+          ],
+        }}
       />
       <section>
         <UpdateServiceForm

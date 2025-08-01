@@ -1,8 +1,8 @@
 'use client';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { Button, ChevronDownIcon, Popover, Separator, Spinner, TextField } from '@radix-ui/themes';
-import { KeyboardEventHandler, useState, useTransition } from 'react';
+import { Button, ChevronDownIcon, Popover, Separator, Spinner, Text, TextField } from '@radix-ui/themes';
+import { KeyboardEventHandler, ReactNode, useState, useTransition } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 
 interface DataInterface {
@@ -16,6 +16,7 @@ export interface AutocompleteProps<Data extends DataInterface> {
   onRemoveItem?: () => void;
   removable?: boolean;
   onLoadMore?: (query: string, page: number) => Promise<Data[]>;
+  errorMessage?: ReactNode;
 }
 
 const ACTIVE_INDEX_CLASS_NAME = 'bg-blue-500 text-shadow-white px-2 transition rounded-sm';
@@ -28,6 +29,7 @@ export const Autocomplete = <Data extends DataInterface>({
   onRemoveItem,
   removable,
   onLoadMore,
+  errorMessage,
 }: AutocompleteProps<Data>) => {
   const [results, setResults] = useState<Data[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -113,6 +115,11 @@ export const Autocomplete = <Data extends DataInterface>({
               </TextField.Slot>
             </TextField.Root>
           </Popover.Trigger>
+          {errorMessage && (
+            <Text as="div" color="red">
+              {errorMessage}
+            </Text>
+          )}
         </div>
         <Popover.Content>
           <TextField.Root

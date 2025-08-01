@@ -1,4 +1,3 @@
-import { breadCrumbItems } from '@/configs/breadcrumb-items';
 import PageHeader from '@/shared/ui/navigation/pages-header';
 import { ListViewAction, ListViewHeaderCell, ListViewPagination, ListViewWrapper } from '@/shared/ui/views/list-view';
 import { getProducts } from '@/repositories/product-repository';
@@ -45,7 +44,10 @@ const Page = async ({ searchParams }: PageProps) => {
       <PageHeader
         title="Services"
         breadcrumbs={{
-          items: breadCrumbItems.services,
+          items: [
+            { label: 'Home', href: routes.home.entry() },
+            { label: 'Services', href: routes.services.entry(), active: true },
+          ],
         }}
         actions={[
           <Link href={routes.services.create.entry()} key={'create'}>
