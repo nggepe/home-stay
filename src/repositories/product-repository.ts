@@ -5,14 +5,14 @@ import { PaginationRepositoryProps, PaginationRepositoryResponse } from '@/share
 import { Product } from '@/shared/types/product-types';
 import { convertPageToOffset, parseListViewParams, parseNextPage, parsePrevPage } from '@/utils/parser';
 
-interface getProductsProps extends PaginationRepositoryProps {
+interface GetProductsProps extends PaginationRepositoryProps {
   type?: 'ROOM' | 'SERVICE';
 }
 
 export const getProducts = async ({
   type,
   ...props
-}: getProductsProps): Promise<PaginationRepositoryResponse<Product>> => {
+}: GetProductsProps): Promise<PaginationRepositoryResponse<Product>> => {
   const { page, limit, search } = parseListViewParams({ ...props });
   const take = limit || 10;
   const skip = convertPageToOffset(page, limit);
