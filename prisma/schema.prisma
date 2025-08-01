@@ -24,19 +24,41 @@ model users {
 }
 
 model products {
-  id          Int         @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   name        String
   price       Int
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   type        ProductType
-  description String?     @db.Text
+  description String?      @db.Text
+  sales_line  sales_line[]
 }
 
 model customers {
   id        Int      @id @default(autoincrement())
   name      String
   phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales     sales[]
+}
+
+model sales {
+  id         Int          @id @default(autoincrement())
+  customer   customers    @relation(fields: [customerId], references: [id])
+  customerId Int
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  sales_line sales_line[]
+}
+
+model sales_line {
+  id        Int      @id @default(autoincrement())
+  sales     sales    @relation(fields: [salesId], references: [id])
+  salesId   Int
+  product   products @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

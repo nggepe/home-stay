@@ -17,6 +17,7 @@ export interface AutocompleteProps<Data extends DataInterface> {
   removable?: boolean;
   onLoadMore?: (query: string, page: number) => Promise<Data[]>;
   errorMessage?: ReactNode;
+  actions?: ReactNode;
 }
 
 const ACTIVE_INDEX_CLASS_NAME = 'bg-blue-500 text-shadow-white px-2 transition rounded-sm';
@@ -30,6 +31,7 @@ export const Autocomplete = <Data extends DataInterface>({
   removable,
   onLoadMore,
   errorMessage,
+  actions,
 }: AutocompleteProps<Data>) => {
   const [results, setResults] = useState<Data[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -132,7 +134,7 @@ export const Autocomplete = <Data extends DataInterface>({
             }}
             type="search"
           ></TextField.Root>
-          <Separator size={'4'} />
+          <Separator size={'4'} my={'3'} />
           {!loading && (
             <div className="flex flex-col">
               {results.map((item, index) => {
@@ -152,21 +154,21 @@ export const Autocomplete = <Data extends DataInterface>({
               })}
             </div>
           )}
+          {results.length == 0 && <Text align={'center'}>No data available</Text>}
           {loading && (
             <div className="py-2">
               <Spinner />
             </div>
           )}
-          {onLoadMore && (
-            <>
-              <Separator size={'4'} />
-              <div className="flex justify-end">
-                <Button variant="soft" onClick={handleLoadMore}>
-                  Load more
-                </Button>
-              </div>
-            </>
-          )}
+          <Separator size={'4'} my={'3'} />
+          <div className="flex justify-between">
+            <div>{actions}</div>
+            {onLoadMore && (
+              <Button variant="soft" onClick={handleLoadMore} size={'1'}>
+                More
+              </Button>
+            )}
+          </div>
         </Popover.Content>
       </Popover.Root>
     </div>

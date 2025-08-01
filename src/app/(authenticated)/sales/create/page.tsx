@@ -1,18 +1,17 @@
 import { routes } from '@/configs/routes';
 import PageHeader from '@/shared/ui/navigation/pages-header';
-import { Button } from '@radix-ui/themes';
-import Link from 'next/link';
+import { CreateSalesForm } from './form';
 
 export const metadata = {
-  title: 'Sales',
-  description: 'List of all sales',
+  title: 'Create Sales',
+  description: 'Create a new sales',
 };
 
-const SalesPage = () => {
+const CreateSalesPage = () => {
   return (
     <>
       <PageHeader
-        title="Sales"
+        title="Create Sales"
         breadcrumbs={{
           items: [
             {
@@ -22,18 +21,18 @@ const SalesPage = () => {
             {
               label: 'Sales',
               href: routes.sales.entry(),
+            },
+            {
+              label: 'Create Sales',
+              href: routes.sales.create.entry(),
               active: true,
             },
           ],
         }}
-        actions={[
-          <Link href={routes.sales.create.entry()} key={'create'}>
-            <Button variant="classic">New Sales</Button>
-          </Link>,
-        ]}
       />
+      <CreateSalesForm />
     </>
   );
 };
 
-export default SalesPage;
+export default CreateSalesPage;
