@@ -4,6 +4,12 @@ export const routes = {
   },
   users: {
     entry: () => '/users',
+    detail: (id: number) => ({
+      entry: `/users/${id}`,
+    }),
+    create: {
+      entry: () => '/users/create',
+    },
   },
   rooms: {
     entry: () => '/rooms',

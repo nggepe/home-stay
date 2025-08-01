@@ -28,7 +28,9 @@ export async function middleware(req: NextRequest) {
       return response;
     }
   } catch (error) {
-    console.error(error);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
     const refresh = req.cookies.get(JWT_REFRESH_COOKIE_NAME);
     if (refresh) {
       try {
@@ -47,7 +49,9 @@ export async function middleware(req: NextRequest) {
           return response;
         }
       } catch (error) {
-        console.error(error);
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
       }
     }
     url.pathname = '/login';
