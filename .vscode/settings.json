@@ -36,5 +36,5 @@
     "editor.tabSize": 2,
     "editor.formatOnSave": true
   },
-  "cSpell.words": ["autoincrement", "toploader", "turbopack", "Yori"]
+  "cSpell.words": ["autoincrement", "toploader", "turbopack", "usehooks", "Yori"]
 }

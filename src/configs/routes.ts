@@ -2,6 +2,9 @@ export const routes = {
   home: {
     entry: () => '/',
   },
+  users: {
+    entry: () => '/users',
+  },
   rooms: {
     entry: () => '/rooms',
     create: {

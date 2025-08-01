@@ -9,6 +9,7 @@ export default function Home() {
       style={{ minHeight: 'calc(100vh - 60px)' }}
     >
       <div className="flex flex-wrap gap-4 justify-center">
+        <DashboardMenu title="Users" icon="/icons/user.png" link="/users" />
         <DashboardMenu title="Rooms" icon="/icons/bedroom.png" link="/rooms" />
         <DashboardMenu title="Services" icon="/icons/services.png" link="/services" />
         <DashboardMenu title="Sales" icon="/icons/sales.png" link="/sales" />
