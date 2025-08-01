@@ -11,6 +11,15 @@ export const routes = {
       entry: () => '/users/create',
     },
   },
+  customers: {
+    entry: () => '/customers',
+    create: {
+      entry: () => '/customers/create',
+    },
+    detail: (id: number) => ({
+      entry: `/customers/${id}`,
+    }),
+  },
   rooms: {
     entry: () => '/rooms',
     create: {
