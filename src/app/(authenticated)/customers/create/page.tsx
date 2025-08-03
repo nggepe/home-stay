@@ -15,8 +15,8 @@ const CreateCustomerPage = () => {
         breadcrumbs={{
           items: [
             { label: 'Home', href: routes.home.entry() },
-            { label: 'Customers', href: routes.rooms.entry() },
-            { label: 'Create Customer', href: routes.rooms.create.entry(), active: true },
+            { label: 'Customers', href: routes.customers.entry() },
+            { label: 'Create Customer', href: routes.customers.create.entry(), active: true },
           ],
         }}
       />

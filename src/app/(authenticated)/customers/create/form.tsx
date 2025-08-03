@@ -6,6 +6,7 @@ import { createCustomer } from '@/repositories/customer-repository';
 import { Customer } from '@/shared/types/customer-types';
 import { useToast } from '@/shared/ui/providers/global-toast';
 import { toastError } from '@/utils/errors';
+import { Card } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
 
 export const CreateCustomerForm = () => {
@@ -26,5 +27,9 @@ export const CreateCustomerForm = () => {
     }
   };
 
-  return <FormCustomer submit={handleOnSubmit} />;
+  return (
+    <Card>
+      <FormCustomer submit={handleOnSubmit} />
+    </Card>
+  );
 };

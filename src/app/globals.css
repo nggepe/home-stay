@@ -41,3 +41,6 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.rdp-root {
+  --rdp-accent-color: var(--accent-9);
+}

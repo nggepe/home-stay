@@ -1,13 +1,14 @@
 import { routes } from '@/configs/routes';
 import PageHeader from '@/shared/ui/navigation/pages-header';
 import { CreateSalesForm } from './form';
+import { Suspense } from 'react';
 
 export const metadata = {
   title: 'Create Sales',
   description: 'Create a new sales',
 };
 
-const CreateSalesPage = () => {
+const CreateSalesPage = async () => {
   return (
     <>
       <PageHeader
@@ -30,7 +31,9 @@ const CreateSalesPage = () => {
           ],
         }}
       />
-      <CreateSalesForm />
+      <Suspense fallback={<div>Loading...</div>}>
+        <CreateSalesForm />
+      </Suspense>
     </>
   );
 };
