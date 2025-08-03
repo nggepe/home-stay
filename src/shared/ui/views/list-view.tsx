@@ -4,9 +4,11 @@ import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from '@radix-u
 import { Button, Card, Table as RadixTable, Separator, Text, TextField } from '@radix-ui/themes';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FC, HtmlHTMLAttributes, PropsWithChildren, ReactNode } from 'react';
-import { useDebounceCallback } from 'usehooks-ts';
+import { useDebounceCallback, useMediaQuery } from 'usehooks-ts';
 import { PaginationRepositoryResponse } from '../../types/pagination-types';
 import Image from 'next/image';
+import { useHasMounted } from '@/shared/hooks/use-has-mounted';
+import FormGroup from '../forms/form-group';
 
 // Header cell interface
 export interface ListViewHeaderCell {
@@ -33,12 +35,15 @@ export const ListViewWrapper: FC<PropsWithChildren> = ({ children }) => {
 };
 
 export const ListView = <Data extends ListViewData>(props: ListViewProps<Data>) => {
-  return (
-    <>
-      <ListViewTable {...props} />
-      <ListViewKanban {...props} />
-    </>
-  );
+  const mounted = useHasMounted();
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  if (!mounted) {
+    return <></>;
+  }
+  if (isMobile) {
+    return <ListViewKanban {...props} />;
+  }
+  return <ListViewTable {...props} />;
 };
 
 // Table version of the list view
@@ -47,39 +52,49 @@ export const ListViewTable = <Data extends ListViewData>(props: ListViewProps<Da
   const router = useRouter();
 
   return (
-    <RadixTable.Root variant="surface" className="hidden lg:block">
-      <RadixTable.Header>
-        <RadixTable.Row>
-          {headers.map((header) => (
-            <RadixTable.ColumnHeaderCell key={header.key} className={header.className}>
-              {header.label}
-            </RadixTable.ColumnHeaderCell>
-          ))}
-        </RadixTable.Row>
-      </RadixTable.Header>
-      <RadixTable.Body>
-        {props.data.map((row, index) => {
-          return (
-            <RadixTable.Row key={index} className={row.detailRoute ? 'hover:bg-[#0000004d]' : ''}>
-              {headers.map((header) => {
-                if (header.key === 'action') {
-                  return <RadixTable.Cell key={header.key}>{row[header.key]}</RadixTable.Cell>;
-                }
-                return (
-                  <RadixTable.Cell
-                    className={row.detailRoute ? 'cursor-pointer' : ''}
-                    onClick={() => row.detailRoute && router.push(row.detailRoute)}
-                    key={header.key}
-                  >
-                    {row[header.key]}
-                  </RadixTable.Cell>
-                );
-              })}
-            </RadixTable.Row>
-          );
-        })}
-      </RadixTable.Body>
-    </RadixTable.Root>
+    <>
+      <RadixTable.Root variant="surface">
+        <RadixTable.Header>
+          <RadixTable.Row>
+            {headers.map((header) => (
+              <RadixTable.ColumnHeaderCell key={header.key} className={header.className}>
+                {header.label}
+              </RadixTable.ColumnHeaderCell>
+            ))}
+          </RadixTable.Row>
+        </RadixTable.Header>
+        <RadixTable.Body>
+          {props.data.map((row, index) => {
+            return (
+              <RadixTable.Row key={index} className={row.detailRoute ? 'hover:bg-[#0000004d]' : ''}>
+                {headers.map((header) => {
+                  if (header.key === 'action') {
+                    return <RadixTable.Cell key={header.key}>{row[header.key]}</RadixTable.Cell>;
+                  }
+                  return (
+                    <RadixTable.Cell
+                      className={row.detailRoute ? 'cursor-pointer' : ''}
+                      onClick={() => row.detailRoute && router.push(row.detailRoute)}
+                      key={header.key}
+                    >
+                      {row[header.key]}
+                    </RadixTable.Cell>
+                  );
+                })}
+              </RadixTable.Row>
+            );
+          })}
+        </RadixTable.Body>
+      </RadixTable.Root>
+      {props.data.length === 0 && (
+        <Card className="py-6 w-full">
+          <Image width={250} height={250} src={'/no-data.svg'} alt="no data" className="mx-auto" />
+          <Text align={'center'} size={'6'} as="div" className="m-5">
+            No data available
+          </Text>
+        </Card>
+      )}
+    </>
   );
 };
 
@@ -96,25 +111,21 @@ export const ListViewKanban = <Data extends ListViewData>(props: ListViewProps<D
     );
   }
   return (
-    <div className="block lg:hidden">
+    <div>
       {props.data.map((item, index) => {
         return (
-          <Card key={index} className="mb-3">
-            <table className="w-full" onClick={() => item.detailRoute && router.push(item.detailRoute)}>
-              <tbody>
-                {props.headers.map((header) => {
-                  if (header.key == 'action') {
-                    return null;
-                  }
-                  return (
-                    <tr key={header.key}>
-                      <td className="text-start">{header.label}</td>
-                      <th className="text-end">{item[header.key]}</th>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <Card key={index} className="mb-3" onClick={() => item.detailRoute && router.push(item.detailRoute)}>
+            {props.headers.map((header) => {
+              if (header.key == 'action') {
+                return null;
+              }
+              return (
+                <FormGroup key={header.key}>
+                  <div className={header.className}>{header.label}</div>
+                  <div>{item[header.key]}</div>
+                </FormGroup>
+              );
+            })}
             {item.action && (
               <>
                 <Separator className="w-full" my="3" size={'4'} />

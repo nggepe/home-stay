@@ -6,6 +6,7 @@ import { updateCustomer } from '@/repositories/customer-repository';
 import { Customer } from '@/shared/types/customer-types';
 import { useToast } from '@/shared/ui/providers/global-toast';
 import { toastError } from '@/utils/errors';
+import { Card } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
 
 interface UpdateCustomerFormProps {
@@ -30,5 +31,9 @@ export const UpdateCustomerForm = ({ id, defaultValue }: UpdateCustomerFormProps
     }
   };
 
-  return <FormCustomer defaultValue={defaultValue} submit={handleOnSubmit} />;
+  return (
+    <Card>
+      <FormCustomer defaultValue={defaultValue} submit={handleOnSubmit} />
+    </Card>
+  );
 };

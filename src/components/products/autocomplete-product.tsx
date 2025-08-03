@@ -3,6 +3,7 @@
 import { getProducts } from '@/repositories/product-repository';
 import { Autocomplete } from '../../shared/ui/autocomplete/autocomplete';
 import { Product } from '@/shared/types/product-types';
+import { HTMLInputProps } from '@/shared/types/html-input';
 
 type AutocompleteData = Product & { display: string };
 
@@ -12,6 +13,8 @@ interface AutocompleteProductProps {
   onSelectedItem?: (item: AutocompleteData) => void;
   onRemoveItem?: () => void;
   removable?: boolean;
+  showTypeOnDisplay?: boolean;
+  inputProps?: HTMLInputProps;
 }
 
 export const AutocompleteProduct = ({
@@ -20,12 +23,14 @@ export const AutocompleteProduct = ({
   onSelectedItem,
   onRemoveItem,
   removable,
+  showTypeOnDisplay,
+  inputProps,
 }: AutocompleteProductProps) => {
   const search = async (query: string) => {
     const { data } = await getProducts({ search: query, type });
     return data.map((e) => ({
       ...e,
-      display: e.name,
+      display: showTypeOnDisplay ? `${e.name} | ${e.type}` : e.name,
     }));
   };
 
@@ -33,19 +38,20 @@ export const AutocompleteProduct = ({
     const { data } = await getProducts({ search: query, type, page: page.toString() });
     return data.map((e) => ({
       ...e,
-      display: e.name,
+      display: showTypeOnDisplay ? `${e.name} | ${e.type}` : e.name,
     }));
   };
 
   return (
     <Autocomplete<AutocompleteData>
       onSearch={search}
-      renderItem={(item) => item.name}
+      renderItem={(item) => (showTypeOnDisplay ? `${item.name} | ${item.type}` : item.name)}
       placeholder={placeholder}
       removable={removable}
       onRemoveItem={onRemoveItem}
       onSelectedItem={onSelectedItem}
       onLoadMore={onLoadMore}
+      inputProps={inputProps}
     />
   );
 };

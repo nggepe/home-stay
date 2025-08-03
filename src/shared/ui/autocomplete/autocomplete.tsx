@@ -1,9 +1,10 @@
 'use client';
 
+import { HTMLInputProps } from '@/shared/types/html-input';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Button, ChevronDownIcon, Popover, Separator, Spinner, Text, TextField } from '@radix-ui/themes';
-import { KeyboardEventHandler, ReactNode, useState, useTransition } from 'react';
-import { useDebounceCallback } from 'usehooks-ts';
+import { KeyboardEventHandler, ReactNode, useEffect, useState, useTransition } from 'react';
+import { useDebounceValue } from 'usehooks-ts';
 
 interface DataInterface {
   display: string;
@@ -18,6 +19,7 @@ export interface AutocompleteProps<Data extends DataInterface> {
   onLoadMore?: (query: string, page: number) => Promise<Data[]>;
   errorMessage?: ReactNode;
   actions?: ReactNode;
+  inputProps?: HTMLInputProps;
 }
 
 const ACTIVE_INDEX_CLASS_NAME = 'bg-blue-500 text-shadow-white px-2 transition rounded-sm';
@@ -32,6 +34,7 @@ export const Autocomplete = <Data extends DataInterface>({
   onLoadMore,
   errorMessage,
   actions,
+  inputProps,
 }: AutocompleteProps<Data>) => {
   const [results, setResults] = useState<Data[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -39,17 +42,8 @@ export const Autocomplete = <Data extends DataInterface>({
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [selectedItem, setSelectedItem] = useState<Data | null>(null);
   const [searchText, setSearchText] = useState<string>('');
+  const [debouncedSearch, setDebouncedSearch] = useDebounceValue(searchText, 750);
   const [page, setPage] = useState<number>(1);
-
-  const _search = useDebounceCallback(async (val: string) => {
-    setOpen(true);
-    startTransition(async () => {
-      const data = await onSearch(val);
-      startTransition(() => {
-        setResults(data);
-      });
-    });
-  }, 750);
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key === 'ArrowDown') {
@@ -68,7 +62,8 @@ export const Autocomplete = <Data extends DataInterface>({
 
   const handleOnOpenChange = (open: boolean) => {
     if (open && !results.length) {
-      _search('');
+      // _search('');
+      setDebouncedSearch('');
     }
     setOpen(open);
   };
@@ -93,29 +88,40 @@ export const Autocomplete = <Data extends DataInterface>({
     }
   };
 
+  useEffect(() => {
+    startTransition(async () => {
+      const data = await onSearch(debouncedSearch);
+
+      setResults(data);
+    });
+  }, [debouncedSearch, onSearch]);
+
   return (
     <div className="relative">
       <Popover.Root onOpenChange={handleOnOpenChange} open={open}>
         <div className="relative">
-          <Popover.Trigger>
-            <TextField.Root
-              value={selectedItem?.display ?? ''}
-              onChange={() => setSelectedItem(null)}
-              className="w-full"
-              placeholder={placeholder}
-            >
-              <TextField.Slot></TextField.Slot>
-              <TextField.Slot>
-                <Button variant="ghost" onClick={() => setOpen(true)}>
-                  <ChevronDownIcon />
+          <TextField.Root
+            {...inputProps}
+            value={selectedItem?.display ?? ''}
+            onChange={() => setSelectedItem(null)}
+            className="w-full"
+            placeholder={placeholder}
+            onFocus={() => setOpen(true)}
+          >
+            <TextField.Slot></TextField.Slot>
+            <TextField.Slot>
+              <Button variant="ghost" onClick={() => setOpen(true)}>
+                <ChevronDownIcon />
+              </Button>
+              {selectedItem && removable && (
+                <Button onClick={handleRemoveItem} variant="ghost">
+                  <Cross2Icon />
                 </Button>
-                {selectedItem && removable && (
-                  <Button onClick={handleRemoveItem} variant="ghost">
-                    <Cross2Icon />
-                  </Button>
-                )}
-              </TextField.Slot>
-            </TextField.Root>
+              )}
+            </TextField.Slot>
+          </TextField.Root>
+          <Popover.Trigger>
+            <div className="w-full"></div>
           </Popover.Trigger>
           {errorMessage && (
             <Text as="div" color="red">
@@ -129,7 +135,6 @@ export const Autocomplete = <Data extends DataInterface>({
             placeholder={placeholder}
             onChange={(e) => {
               setSearchText(e.target.value);
-              _search(e.target.value);
               setPage(1);
             }}
             type="search"
@@ -154,7 +159,7 @@ export const Autocomplete = <Data extends DataInterface>({
               })}
             </div>
           )}
-          {results.length == 0 && <Text align={'center'}>No data available</Text>}
+          {results.length == 0 && !loading && <Text align={'center'}>No data available</Text>}
           {loading && (
             <div className="py-2">
               <Spinner />
@@ -163,7 +168,7 @@ export const Autocomplete = <Data extends DataInterface>({
           <Separator size={'4'} my={'3'} />
           <div className="flex justify-between">
             <div>{actions}</div>
-            {onLoadMore && (
+            {onLoadMore && !loading && results.length > 0 && (
               <Button variant="soft" onClick={handleLoadMore} size={'1'}>
                 More
               </Button>
