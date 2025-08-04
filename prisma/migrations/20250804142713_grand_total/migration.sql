@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "sales" ADD COLUMN     "grandTotal" DOUBLE PRECISION NOT NULL DEFAULT 0;
