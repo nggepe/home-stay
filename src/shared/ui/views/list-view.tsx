@@ -121,7 +121,9 @@ export const ListViewKanban = <Data extends ListViewData>(props: ListViewProps<D
               }
               return (
                 <FormGroup key={header.key}>
-                  <div className={header.className}>{header.label}</div>
+                  <Text as="div" size={'1'} className={header.className}>
+                    {header.label}
+                  </Text>
                   <div>{item[header.key]}</div>
                 </FormGroup>
               );
