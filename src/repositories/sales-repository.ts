@@ -75,3 +75,16 @@ export const getSales = async ({
     },
   };
 };
+
+export const deleteSales = async (id: number) => {
+  await Database.sales_line.deleteMany({
+    where: {
+      salesId: id,
+    },
+  });
+  await Database.sales.delete({
+    where: {
+      id,
+    },
+  });
+};

@@ -1,10 +1,14 @@
 'use client';
 
 import { routes } from '@/configs/routes';
+import { deleteSales } from '@/repositories/sales-repository';
+import { useToast } from '@/shared/hooks/use-toast';
 import { AllAsReactNode } from '@/shared/types/all-react-node';
 import { Sales } from '@/shared/types/sales-types';
 import { ButtonDelete } from '@/shared/ui/buttons/buttons';
 import { ListView, ListViewData, ListViewHeaderCell } from '@/shared/ui/views/list-view';
+import { toastError } from '@/utils/errors';
+import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
 export interface SalesListViewTable {
@@ -13,12 +17,24 @@ export interface SalesListViewTable {
 
 type SalesListViewData = ListViewData & AllAsReactNode<Sales>;
 export const SalesListView: FC<SalesListViewTable> = ({ data }) => {
+  const toast = useToast();
+  const router = useRouter();
   const headers: ListViewHeaderCell[] = [
     { label: 'Customer', key: 'customer' },
     { label: 'Booked At', key: 'bookedAt' },
     { label: 'Total', key: 'grandTotal' },
     { label: '', key: 'action' },
   ];
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteSales(id);
+      toast.showToast('Sales deleted successfully');
+      router.refresh();
+    } catch (error) {
+      toastError(error, toast);
+    }
+  };
 
   const sales: SalesListViewData[] = data.map((item) => ({
     detailRoute: routes.sales.detail(item.id).entry,
@@ -38,7 +54,7 @@ export const SalesListView: FC<SalesListViewTable> = ({ data }) => {
             confirmText: 'Delete',
             cancelText: 'Cancel',
             onConfirm: async () => {
-              // await handleDelete(item.id!);
+              await handleDelete(item.id!);
             },
           }}
         />
