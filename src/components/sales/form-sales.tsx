@@ -251,7 +251,11 @@ const RowData = ({ watch, index, control, setValue, orderLines, errors }: RowDat
         {product?.type === 'ROOM' && (
           <>
             <FormGroup className="mt-3">
-              <label htmlFor={`orderLines.${index}.checkIn`}>Check In</label>
+              <label htmlFor={`orderLines.${index}.checkIn`}>
+                <Text as="span" size={'1'}>
+                  Check In
+                </Text>
+              </label>
               <Controller
                 control={control}
                 name={`orderLines.${index}.checkIn`}
@@ -267,7 +271,11 @@ const RowData = ({ watch, index, control, setValue, orderLines, errors }: RowDat
               />
             </FormGroup>
             <FormGroup>
-              <label htmlFor={`orderLines.${index}.checkOut`}>Check Out</label>
+              <label htmlFor={`orderLines.${index}.checkOut`}>
+                <Text as="span" size={'1'}>
+                  Check Out
+                </Text>
+              </label>
               <Controller
                 control={control}
                 name={`orderLines.${index}.checkOut`}

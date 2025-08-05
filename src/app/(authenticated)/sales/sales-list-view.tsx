@@ -12,6 +12,8 @@ import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import { Button } from '@radix-ui/themes';
+import Link from 'next/link';
 
 export interface SalesListViewTable {
   data: Sales[];
@@ -53,6 +55,9 @@ export const SalesListView: FC<SalesListViewTable> = ({ data }) => {
     id: item.id,
     action: (
       <div className="flex justify-end">
+        <Link href={`/api/sales/${item.id}`} target="_blank">
+          <Button variant="soft">PDF</Button>
+        </Link>
         <ButtonDelete
           dialog={{
             title: 'Delete Sales',
