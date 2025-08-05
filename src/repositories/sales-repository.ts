@@ -41,6 +41,33 @@ export const createSales = async (data: CreateSalesProps) => {
   });
 };
 
+export const updateSales = async (id: number, data: CreateSalesProps) => {
+  const code = await generateNewCode();
+  await Database.$transaction(async (trx) => {
+    await trx.sales_line.deleteMany({
+      where: {
+        salesId: id,
+      },
+    });
+    await Database.sales.update({
+      where: { id: id },
+      data: {
+        code,
+        bookedAt: data.bookedAt,
+        createdAt: new Date(),
+        customerId: data.customerId,
+        updatedAt: new Date(),
+        grandTotal: data.grandTotal,
+        sales_line: {
+          createMany: {
+            data: data.salesLine,
+          },
+        },
+      },
+    });
+  });
+};
+
 export const getSales = async ({
   ...props
 }: PaginationRepositoryProps): Promise<PaginationRepositoryResponse<Sales>> => {
@@ -110,4 +137,21 @@ export const generateNewCode = async () => {
   }
   const newCode = String(Number(code.code) + 1).padStart(4, '0');
   return newCode;
+};
+
+export const getSalesById = async (id: number) => {
+  const sales = await Database.sales.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      sales_line: {
+        include: {
+          product: true,
+        },
+      },
+      customer: true,
+    },
+  });
+  return sales;
 };

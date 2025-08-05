@@ -23,6 +23,7 @@ export const AutocompleteCustomers: FC<AutocompleteCustomersProps> = ({
   placeholder,
   removable,
   onRemoveItem,
+  ...props
 }) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const toast = useToast();
@@ -47,6 +48,7 @@ export const AutocompleteCustomers: FC<AutocompleteCustomersProps> = ({
 
   return (
     <Autocomplete<AutocompleteData>
+      {...props}
       onSearch={search}
       renderItem={(item) => item.display}
       onLoadMore={search}

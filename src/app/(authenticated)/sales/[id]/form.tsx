@@ -1,7 +1,7 @@
 'use client';
 
 import FormSales from '@/components/sales/form-sales';
-import { createSales } from '@/repositories/sales-repository';
+import { updateSales } from '@/repositories/sales-repository';
 import { useToast } from '@/shared/hooks/use-toast';
 import { toastError } from '@/utils/errors';
 import { useRouter } from 'next/navigation';
@@ -9,12 +9,17 @@ import { useRouter } from 'next/navigation';
 type FormSalesProps = React.ComponentProps<typeof FormSales>;
 type FormInput = Parameters<NonNullable<FormSalesProps['onSubmit']>>[0];
 
-export const CreateSalesForm = () => {
+interface UpdateSalesFormProps {
+  id: number;
+  defaultValue?: FormInput;
+}
+
+export const UpdateSalesForm = ({ defaultValue, id }: UpdateSalesFormProps) => {
   const toast = useToast();
   const router = useRouter();
   const onSubmit = async (data: FormInput) => {
     try {
-      await createSales({
+      await updateSales(id, {
         bookedAt: data.bookedAt,
         customerId: data.customer.id,
         grandTotal: data.grandTotal,
@@ -38,5 +43,5 @@ export const CreateSalesForm = () => {
       toastError(error, toast);
     }
   };
-  return <FormSales onSubmit={onSubmit} />;
+  return <FormSales onSubmit={onSubmit} defaultValues={defaultValue} />;
 };

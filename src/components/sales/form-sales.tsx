@@ -29,6 +29,7 @@ import { DatePicker } from '@/shared/ui/inputs/date-picker';
 
 interface FormSalesProps {
   onSubmit: (data: FormInput) => void;
+  defaultValues?: FormInput;
 }
 
 type ACProps = React.ComponentProps<typeof AutocompleteCustomers>;
@@ -42,9 +43,9 @@ type ProductData = Parameters<NonNullable<APProps['onSelectedItem']>>[0];
 interface OrderLine {
   product?: ProductData;
   quantity?: number;
-  price?: string;
-  checkIn?: Date;
-  checkOut?: Date;
+  price?: number;
+  checkIn?: Date | null;
+  checkOut?: Date | null;
   subTotal?: number;
 }
 
@@ -80,7 +81,7 @@ const HeaderListView: ListViewHeaderCell[] = [
   },
 ];
 
-const FormSales: FC<FormSalesProps> = ({ onSubmit }) => {
+const FormSales: FC<FormSalesProps> = ({ onSubmit, defaultValues }) => {
   const {
     handleSubmit,
     control,
@@ -88,7 +89,7 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit }) => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<FormInput>();
+  } = useForm<FormInput>({ defaultValues });
 
   const orderLines = useFieldArray({ control, name: 'orderLines' });
 
@@ -122,6 +123,7 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit }) => {
                   onSelectedItem={field.onChange}
                   errorMessage={errors.customer?.message}
                   inputProps={{ id: 'customer', name: 'customer' }}
+                  defaultDisplay={field.value?.display}
                 />
               )}
             />
@@ -147,18 +149,18 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit }) => {
         </Box>
       </Grid>
       <ListViewWrapper>
-        <ListViewAction search={false}>
+        <ListViewAction search={false} className="mb-2">
           <Button
             variant="soft"
             type="button"
-            onClick={() => orderLines.append({ price: '0', quantity: 1, subTotal: 0 })}
+            onClick={() => orderLines.append({ price: 0, quantity: 1, subTotal: 0 })}
           >
             Add Order Line
           </Button>
         </ListViewAction>
         <ListView<OrderLineListViewData> data={renderData} headers={HeaderListView} />
       </ListViewWrapper>
-      <div className="text-end">
+      <div className="text-end mt-2">
         <Button variant="classic" type="submit">
           Save
         </Button>
@@ -206,11 +208,12 @@ const RowData = ({ watch, index, control, setValue, orderLines, errors }: RowDat
               <AutocompleteProduct
                 onSelectedItem={(item) => {
                   field.onChange(item);
-                  setValue(`orderLines.${index}.price`, item.price.toString());
+                  setValue(`orderLines.${index}.price`, item.price);
                   setValue(`orderLines.${index}.subTotal`, (qty ?? 0) * item.price);
                   convertDateInOUt(item as ProductData, qty ?? 0);
                 }}
                 showTypeOnDisplay
+                defaultDisplay={product?.display}
               />
               <div className="text-red-500">{errors.orderLines?.[index]?.product?.message}</div>
             </>
