@@ -17,6 +17,7 @@ export const CreateSalesForm = () => {
       await createSales({
         bookedAt: data.bookedAt,
         customerId: data.customer.id,
+        grandTotal: data.grandTotal,
         salesLine: data.orderLines.map((e) => {
           return {
             productId: e.product!.id!,

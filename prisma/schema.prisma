@@ -50,6 +50,7 @@ model sales {
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   bookedAt   DateTime?
+  grandTotal Float        @default(0)
   sales_line sales_line[]
 }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Button, Grid, Text, TextField } from '@radix-ui/themes';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import {
   Control,
   Controller,
@@ -11,6 +11,7 @@ import {
   useForm,
   UseFormSetValue,
   UseFormWatch,
+  useWatch,
 } from 'react-hook-form';
 import { AutocompleteCustomers } from '../products/autocomplete-customers';
 import FormGroup from '@/shared/ui/forms/form-group';
@@ -53,6 +54,7 @@ interface FormInput {
   customer: CustomerData;
   orderLines: OrderLine[];
   bookedAt: Date;
+  grandTotal: number;
 }
 
 const HeaderListView: ListViewHeaderCell[] = [
@@ -82,6 +84,7 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit }) => {
   const {
     handleSubmit,
     control,
+    register,
     setValue,
     watch,
     formState: { errors },
@@ -92,6 +95,16 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit }) => {
   const renderData = orderLines.fields.map((fields, index) => {
     return RowData({ watch, index, control, setValue, orderLines, errors });
   });
+
+  const orderLinesValues = useWatch({
+    control,
+    name: 'orderLines',
+  }) as OrderLine[] | undefined;
+
+  useEffect(() => {
+    const grandTotal = (orderLinesValues ?? []).reduce((acc, line) => acc + (line.subTotal ?? 0), 0);
+    setValue('grandTotal', grandTotal);
+  }, [orderLinesValues, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -124,6 +137,12 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit }) => {
                 return <DatePicker id="bookedAt" value={field.value} onSelect={field.onChange} />;
               }}
             />
+          </FormGroup>
+        </Box>
+        <Box>
+          <FormGroup>
+            <label htmlFor="grandTotal">Grand Total</label>
+            <TextField.Root id="grandTotal" {...register('grandTotal')} readOnly />
           </FormGroup>
         </Box>
       </Grid>

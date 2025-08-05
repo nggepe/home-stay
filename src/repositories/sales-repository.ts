@@ -16,6 +16,7 @@ interface CreateSalesProps {
   bookedAt: Date;
   customerId: number;
   salesLine: salesLine[];
+  grandTotal: number;
 }
 
 export const createSales = async (data: CreateSalesProps) => {
@@ -25,6 +26,7 @@ export const createSales = async (data: CreateSalesProps) => {
       createdAt: new Date(),
       customerId: data.customerId,
       updatedAt: new Date(),
+      grandTotal: data.grandTotal,
       sales_line: {
         createMany: {
           data: data.salesLine,
