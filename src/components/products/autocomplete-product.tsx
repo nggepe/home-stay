@@ -4,10 +4,11 @@ import { getProducts } from '@/repositories/product-repository';
 import { Autocomplete } from '../../shared/ui/autocomplete/autocomplete';
 import { Product } from '@/shared/types/product-types';
 import { HTMLInputProps } from '@/shared/types/html-input';
+import { AutocompleteCustomersProps } from './autocomplete-customers';
 
 type AutocompleteData = Product & { display: string };
 
-interface AutocompleteProductProps {
+interface AutocompleteProductProps extends Omit<AutocompleteCustomersProps, 'onSelectedItem'> {
   type?: Product['type'];
   placeholder?: string;
   onSelectedItem?: (item: AutocompleteData) => void;
@@ -25,6 +26,7 @@ export const AutocompleteProduct = ({
   removable,
   showTypeOnDisplay,
   inputProps,
+  ...props
 }: AutocompleteProductProps) => {
   const search = async (query: string) => {
     const { data } = await getProducts({ search: query, type });
@@ -44,6 +46,7 @@ export const AutocompleteProduct = ({
 
   return (
     <Autocomplete<AutocompleteData>
+      {...props}
       onSearch={search}
       renderItem={(item) => (showTypeOnDisplay ? `${item.name} | ${item.type}` : item.name)}
       placeholder={placeholder}

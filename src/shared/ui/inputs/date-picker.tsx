@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 
 export interface DatePickerProps extends Omit<HTMLInputProps, 'defaultValue' | 'type' | 'name'> {
-  value?: Date;
+  value?: Date | null;
   onSelect?: (date?: Date) => void;
 }
 export const DatePicker: FC<DatePickerProps> = ({ value, onSelect, id, className, placeholder }) => {
@@ -21,7 +21,7 @@ export const DatePicker: FC<DatePickerProps> = ({ value, onSelect, id, className
   };
 
   useEffect(() => {
-    setSelected(value);
+    setSelected(value ?? undefined);
   }, [value]);
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>

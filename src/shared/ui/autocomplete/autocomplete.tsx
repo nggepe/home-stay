@@ -20,6 +20,7 @@ export interface AutocompleteProps<Data extends DataInterface> {
   errorMessage?: ReactNode;
   actions?: ReactNode;
   inputProps?: HTMLInputProps;
+  defaultDisplay?: string;
 }
 
 const ACTIVE_INDEX_CLASS_NAME = 'bg-blue-500 text-shadow-white px-2 transition rounded-sm';
@@ -35,6 +36,7 @@ export const Autocomplete = <Data extends DataInterface>({
   errorMessage,
   actions,
   inputProps,
+  defaultDisplay,
 }: AutocompleteProps<Data>) => {
   const [results, setResults] = useState<Data[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -102,7 +104,7 @@ export const Autocomplete = <Data extends DataInterface>({
         <div className="relative">
           <TextField.Root
             {...inputProps}
-            value={selectedItem?.display ?? ''}
+            value={selectedItem?.display ?? defaultDisplay ?? ''}
             onChange={() => setSelectedItem(null)}
             className="w-full"
             placeholder={placeholder}

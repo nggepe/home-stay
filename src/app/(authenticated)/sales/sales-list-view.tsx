@@ -10,6 +10,8 @@ import { ListView, ListViewData, ListViewHeaderCell } from '@/shared/ui/views/li
 import { toastError } from '@/utils/errors';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
+import { format } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 
 export interface SalesListViewTable {
   data: Sales[];
@@ -23,6 +25,8 @@ export const SalesListView: FC<SalesListViewTable> = ({ data }) => {
     { label: 'Code', key: 'code' },
     { label: 'Customer', key: 'customer' },
     { label: 'Booked At', key: 'bookedAt' },
+    { label: 'Created At', key: 'createdAt' },
+    { label: 'Updated At', key: 'updatedAt' },
     { label: 'Total', key: 'grandTotal' },
     { label: '', key: 'action' },
   ];
@@ -40,12 +44,12 @@ export const SalesListView: FC<SalesListViewTable> = ({ data }) => {
   const sales: SalesListViewData[] = data.map((item) => ({
     detailRoute: routes.sales.detail(item.id).entry,
     code: item.code,
-    bookedAt: item.bookedAt?.toLocaleDateString(),
+    bookedAt: item.bookedAt ? format(item.bookedAt, 'dd MMMM yyyy', { locale: enUS }) : '-',
     customer: item.customer?.name,
     customerId: item.customerId,
     grandTotal: item.grandTotal,
-    createdAt: item.createdAt?.toLocaleDateString(),
-    updatedAt: item.updatedAt?.toLocaleDateString(),
+    createdAt: item.createdAt ? format(item.createdAt, 'dd MMMM yyyy', { locale: enUS }) : '-',
+    updatedAt: item.updatedAt ? format(item.updatedAt, 'dd MMMM yyyy', { locale: enUS }) : '-',
     id: item.id,
     action: (
       <div className="flex justify-end">
