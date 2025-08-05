@@ -5,15 +5,12 @@ import { Button } from '@radix-ui/themes';
 import Link from 'next/link';
 import { routes } from '@/configs/routes';
 import { CustomerListView } from './(components)/customer-list-view';
+import { PageProps } from '@/shared/types/page-types';
 
 export const metadata = {
   title: 'Customers',
   description: 'List of customers available for booking',
 };
-
-interface PageProps {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}
 
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;

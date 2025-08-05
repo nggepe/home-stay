@@ -1,6 +1,9 @@
 'use server';
 
 import { Database } from '@/configs/database';
+import { PaginationRepositoryProps, PaginationRepositoryResponse } from '@/shared/types/pagination-types';
+import { Sales } from '@/shared/types/sales-types';
+import { convertPageToOffset, parseListViewParams, parseNextPage, parsePrevPage } from '@/utils/parser';
 
 interface salesLine {
   productId: number;
@@ -34,4 +37,41 @@ export const createSales = async (data: CreateSalesProps) => {
       },
     },
   });
+};
+
+export const getSales = async ({
+  ...props
+}: PaginationRepositoryProps): Promise<PaginationRepositoryResponse<Sales>> => {
+  const { page, limit, search } = parseListViewParams({ ...props });
+  const take = limit || 10;
+  const skip = convertPageToOffset(page, limit);
+
+  const sales = await Database.sales.findMany({
+    where: {
+      customer: { name: search ? { contains: search, mode: 'insensitive' } : undefined },
+    },
+    take: take,
+    skip: skip,
+    orderBy: {
+      id: 'desc',
+    },
+    include: {
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          phone: true,
+        },
+      },
+    },
+  });
+
+  return {
+    data: sales,
+    pagination: {
+      page: String(page || 1),
+      next: parseNextPage(page, sales.length !== take),
+      prev: parsePrevPage(page),
+    },
+  };
 };
