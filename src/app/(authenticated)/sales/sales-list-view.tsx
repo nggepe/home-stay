@@ -20,6 +20,7 @@ export const SalesListView: FC<SalesListViewTable> = ({ data }) => {
   const toast = useToast();
   const router = useRouter();
   const headers: ListViewHeaderCell[] = [
+    { label: 'Code', key: 'code' },
     { label: 'Customer', key: 'customer' },
     { label: 'Booked At', key: 'bookedAt' },
     { label: 'Total', key: 'grandTotal' },
@@ -38,6 +39,7 @@ export const SalesListView: FC<SalesListViewTable> = ({ data }) => {
 
   const sales: SalesListViewData[] = data.map((item) => ({
     detailRoute: routes.sales.detail(item.id).entry,
+    code: item.code,
     bookedAt: item.bookedAt?.toLocaleDateString(),
     customer: item.customer?.name,
     customerId: item.customerId,

@@ -23,8 +23,10 @@ interface CreateSalesProps {
 }
 
 export const createSales = async (data: CreateSalesProps) => {
+  const code = await generateNewCode();
   await Database.sales.create({
     data: {
+      code,
       bookedAt: data.bookedAt,
       createdAt: new Date(),
       customerId: data.customerId,
@@ -47,9 +49,14 @@ export const getSales = async ({
   const skip = convertPageToOffset(page, limit);
 
   const sales = await Database.sales.findMany({
-    where: {
-      customer: { name: search ? { contains: search, mode: 'insensitive' } : undefined },
-    },
+    where: search
+      ? {
+          OR: [
+            { customer: { name: search ? { contains: search, mode: 'insensitive' } : undefined } },
+            { code: search ? { contains: search, mode: 'insensitive' } : undefined },
+          ],
+        }
+      : undefined,
     take: take,
     skip: skip,
     orderBy: {
@@ -87,4 +94,20 @@ export const deleteSales = async (id: number) => {
       id,
     },
   });
+};
+
+export const generateNewCode = async () => {
+  const code = await Database.sales.findFirst({
+    select: {
+      code: true,
+    },
+    orderBy: {
+      id: 'desc',
+    },
+  });
+  if (!code) {
+    return '1'.padStart(4, '0');
+  }
+  const newCode = String(Number(code.code) + 1).padStart(4, '0');
+  return newCode;
 };

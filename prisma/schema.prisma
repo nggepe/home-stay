@@ -45,6 +45,7 @@ model customers {
 
 model sales {
   id         Int          @id @default(autoincrement())
+  code       String       @unique
   customer   customers    @relation(fields: [customerId], references: [id])
   customerId Int
   createdAt  DateTime     @default(now())

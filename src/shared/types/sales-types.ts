@@ -8,4 +8,5 @@ export interface Sales {
   bookedAt: Date | null;
   grandTotal: number;
   customer: Pick<Customer, 'id' | 'name' | 'phone'>;
+  code: string;
 }

@@ -21,7 +21,7 @@ export const CreateSalesForm = () => {
         salesLine: data.orderLines.map((e) => {
           return {
             productId: e.product!.id!,
-            quantity: e.quantity!,
+            quantity: Number(e.quantity!),
             price: Number(e.price!),
             subtotal: e.subTotal!,
             checkInAt: e.checkIn,
