@@ -10,10 +10,12 @@ export type AlertDialogOptions = {
   cancelText?: string;
   onConfirm?: () => void;
   disableAction?: boolean;
+  form?: React.ReactNode;
 };
 
 type ContextType = {
   open: (options: AlertDialogOptions) => void;
+  close: () => void;
 };
 
 const AlertDialogContext = React.createContext<ContextType | null>(null);
@@ -40,7 +42,7 @@ export const AlertDialogProvider = ({ children }: { children: React.ReactNode })
   };
 
   return (
-    <AlertDialogContext.Provider value={{ open }}>
+    <AlertDialogContext.Provider value={{ open, close }}>
       {children}
       <AlertDialog.Root open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialog.Content>
@@ -48,6 +50,7 @@ export const AlertDialogProvider = ({ children }: { children: React.ReactNode })
           {options?.description && (
             <AlertDialog.Description className="mt-2 text-sm">{options.description}</AlertDialog.Description>
           )}
+          {options?.form}
           {!options?.disableAction && (
             <div className="mt-4 flex justify-end gap-2">
               <AlertDialog.Cancel>

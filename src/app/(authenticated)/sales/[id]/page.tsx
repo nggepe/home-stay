@@ -72,6 +72,11 @@ const EditSalesPage = async ({ params }: PageProps<PageParams>) => {
             quantity: e.quantity,
             subTotal: e.subtotal,
           })),
+          sales_payment: sales.sales_payment.map((v) => ({
+            amount: v.amount,
+            date: v.date,
+          })),
+          totalPayment: sales.totalPayment,
         }}
       />
     </>

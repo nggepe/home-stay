@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "sales" ADD COLUMN     "totalPayment" DOUBLE PRECISION NOT NULL DEFAULT 0;
