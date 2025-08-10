@@ -174,9 +174,14 @@ function line(line: SalesLine, index: number) {
 }
 
 function payment(data: SalesPayment, index: number) {
-  if (index == 0)
+  if (index == 0) {
     return `<tr>
       <td colspan="4" style="text-align:right; padding: 8px 0;">Pembayaran</td>
       <td style="text-align:right; padding: 8px 0;"><small>${idDate(data.date)}</small> - ${data.amount}</td>
     </tr>`;
+  }
+  return `<tr>
+    <td colspan="4" style="text-align:right; padding: 8px 0;"></td>
+    <td style="text-align:right; padding: 8px 0;"><small>${idDate(data.date)}</small> - ${data.amount}</td>
+  </tr>`;
 }
