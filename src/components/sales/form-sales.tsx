@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Grid, Text, TextField } from '@radix-ui/themes';
+import { Box, Button, Grid, Tabs, Text, TextField } from '@radix-ui/themes';
 import { FC, useEffect } from 'react';
 import {
   Control,
@@ -26,6 +26,10 @@ import { AllAsReactNode } from '@/shared/types/all-react-node';
 import { AutocompleteProduct } from '../products/autocomplete-product';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { DatePicker } from '@/shared/ui/inputs/date-picker';
+import { format } from 'date-fns';
+import { enUS } from 'date-fns/locale';
+import { FormPayment } from './form-payments';
+import { useAlertDialog } from '@/shared/ui/providers/global-dialog';
 
 interface FormSalesProps {
   onSubmit: (data: FormInput) => void;
@@ -49,6 +53,11 @@ interface OrderLine {
   subTotal?: number;
 }
 
+interface SalesPayment {
+  amount: number;
+  date: Date;
+}
+
 type OrderLineListViewData = AllAsReactNode<OrderLine> & ListViewData;
 
 interface FormInput {
@@ -56,6 +65,8 @@ interface FormInput {
   orderLines: OrderLine[];
   bookedAt: Date;
   grandTotal: number;
+  totalPayment: number;
+  sales_payment: SalesPayment[];
 }
 
 const HeaderListView: ListViewHeaderCell[] = [
@@ -82,6 +93,7 @@ const HeaderListView: ListViewHeaderCell[] = [
 ];
 
 const FormSales: FC<FormSalesProps> = ({ onSubmit, defaultValues }) => {
+  const dialog = useAlertDialog();
   const {
     handleSubmit,
     control,
@@ -92,6 +104,7 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit, defaultValues }) => {
   } = useForm<FormInput>({ defaultValues });
 
   const orderLines = useFieldArray({ control, name: 'orderLines' });
+  const payments = useFieldArray({ control, name: 'sales_payment' });
 
   const renderData = orderLines.fields.map((fields, index) => {
     return RowData({ watch, index, control, setValue, orderLines, errors });
@@ -102,10 +115,20 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit, defaultValues }) => {
     name: 'orderLines',
   }) as OrderLine[] | undefined;
 
+  const paymentLineViews = useWatch({
+    control,
+    name: 'sales_payment',
+  }) as SalesPayment[];
+
   useEffect(() => {
     const grandTotal = (orderLinesValues ?? []).reduce((acc, line) => acc + (line.subTotal ?? 0), 0);
     setValue('grandTotal', grandTotal);
   }, [orderLinesValues, setValue]);
+
+  useEffect(() => {
+    const paymentTotal = (paymentLineViews ?? []).reduce((prev, payment) => prev + Number(payment.amount ?? '0'), 0);
+    setValue('totalPayment', paymentTotal);
+  }, [paymentLineViews, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -147,19 +170,95 @@ const FormSales: FC<FormSalesProps> = ({ onSubmit, defaultValues }) => {
             <TextField.Root id="grandTotal" {...register('grandTotal')} readOnly />
           </FormGroup>
         </Box>
+        <Box>
+          <FormGroup>
+            <label htmlFor="totalPayment">Total Payment</label>
+            <TextField.Root id="totalPayment" {...register('totalPayment')} readOnly />
+          </FormGroup>
+        </Box>
       </Grid>
-      <ListViewWrapper>
-        <ListViewAction search={false} className="mb-2">
-          <Button
-            variant="soft"
-            type="button"
-            onClick={() => orderLines.append({ price: 0, quantity: 1, subTotal: 0 })}
-          >
-            Add Order Line
-          </Button>
-        </ListViewAction>
-        <ListView<OrderLineListViewData> data={renderData} headers={HeaderListView} />
-      </ListViewWrapper>
+      <Tabs.Root defaultValue="orderLines">
+        <Tabs.List>
+          <Tabs.Trigger value="orderLines">Order Lines</Tabs.Trigger>
+          <Tabs.Trigger value="sales_payment">Sales Payment</Tabs.Trigger>
+        </Tabs.List>
+        <Box pt={'3'}>
+          <Tabs.Content value="orderLines">
+            <ListViewWrapper>
+              <ListViewAction search={false} className="mb-2">
+                <Button
+                  variant="soft"
+                  type="button"
+                  onClick={() => orderLines.append({ price: 0, quantity: 1, subTotal: 0 })}
+                >
+                  Add Order Line
+                </Button>
+              </ListViewAction>
+              <ListView<OrderLineListViewData> data={renderData} headers={HeaderListView} />
+            </ListViewWrapper>
+          </Tabs.Content>
+          <Tabs.Content value="sales_payment">
+            <ListViewWrapper>
+              <ListViewAction search={false} className="mb-2">
+                <Button
+                  variant="soft"
+                  type="button"
+                  onClick={() =>
+                    dialog.open({
+                      title: 'Payment',
+                      disableAction: true,
+                      form: (
+                        <FormPayment
+                          onSubmit={(d) => {
+                            payments.append(d);
+                            dialog.close();
+                          }}
+                          onCancel={() => {
+                            dialog.close();
+                          }}
+                        />
+                      ),
+                    })
+                  }
+                >
+                  Add Sales Payment
+                </Button>
+              </ListViewAction>
+              <ListView<AllAsReactNode<SalesPayment> & ListViewData>
+                data={
+                  payments.fields.map((v, index) => {
+                    return {
+                      date: <>{format(new Date(v.date), 'dd MMMM yyyy', { locale: enUS })}</>,
+                      amount: <>{v.amount}</>,
+                      action: (
+                        <div className="text-end">
+                          <Button variant="outline" color="red" type="button" onClick={() => payments.remove(index)}>
+                            <TrashIcon />
+                          </Button>
+                        </div>
+                      ),
+                    };
+                  }) ?? []
+                }
+                headers={[
+                  {
+                    label: 'Amount',
+                    key: 'amount',
+                  },
+                  {
+                    label: 'Date',
+                    key: 'date',
+                  },
+                  {
+                    label: '',
+                    key: 'action',
+                  },
+                ]}
+              />
+            </ListViewWrapper>
+          </Tabs.Content>
+        </Box>
+      </Tabs.Root>
       <div className="text-end mt-2">
         <Button variant="classic" type="submit">
           Save

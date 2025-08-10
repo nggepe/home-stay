@@ -20,6 +20,11 @@ interface CreateSalesProps {
   customerId: number;
   salesLine: salesLine[];
   grandTotal: number;
+  payments: {
+    amount: number;
+    date: Date;
+  }[];
+  totalPayment: number;
 }
 
 export const createSales = async (data: CreateSalesProps) => {
@@ -37,6 +42,12 @@ export const createSales = async (data: CreateSalesProps) => {
           data: data.salesLine,
         },
       },
+      sales_payment: {
+        createMany: {
+          data: data.payments,
+        },
+      },
+      totalPayment: data.totalPayment,
     },
   });
 };
@@ -49,7 +60,12 @@ export const updateSales = async (id: number, data: CreateSalesProps) => {
         salesId: id,
       },
     });
-    await Database.sales.update({
+    await trx.sales_payment.deleteMany({
+      where: {
+        salesId: id,
+      },
+    });
+    await trx.sales.update({
       where: { id: id },
       data: {
         code,
@@ -63,6 +79,12 @@ export const updateSales = async (id: number, data: CreateSalesProps) => {
             data: data.salesLine,
           },
         },
+        sales_payment: {
+          createMany: {
+            data: data.payments,
+          },
+        },
+        totalPayment: data.totalPayment,
       },
     });
   });
@@ -151,6 +173,7 @@ export const getSalesById = async (id: number) => {
         },
       },
       customer: true,
+      sales_payment: true,
     },
   });
   return sales;

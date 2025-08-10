@@ -22,7 +22,7 @@ export const UpdateSalesForm = ({ defaultValue, id }: UpdateSalesFormProps) => {
       await updateSales(id, {
         bookedAt: data.bookedAt,
         customerId: data.customer.id,
-        grandTotal: data.grandTotal,
+        grandTotal: Number(data.grandTotal),
         salesLine: data.orderLines.map((e) => {
           return {
             productId: e.product!.id!,
@@ -35,6 +35,11 @@ export const UpdateSalesForm = ({ defaultValue, id }: UpdateSalesFormProps) => {
             updatedAt: new Date(),
           };
         }),
+        payments: data.sales_payment.map((e) => ({
+          amount: Number(e.amount),
+          date: e.date,
+        })),
+        totalPayment: Number(data.totalPayment),
       });
       toast.showToast('Sales created successfully');
       router.push('/sales');
