@@ -131,15 +131,23 @@ export const getSales = async ({
 };
 
 export const deleteSales = async (id: number) => {
-  await Database.sales_line.deleteMany({
-    where: {
-      salesId: id,
-    },
-  });
-  await Database.sales.delete({
-    where: {
-      id,
-    },
+  await Database.$transaction(async (trx) => {
+    await trx.sales_payment.deleteMany({
+      where: {
+        salesId: id,
+      },
+    });
+
+    await trx.sales_line.deleteMany({
+      where: {
+        salesId: id,
+      },
+    });
+    await trx.sales.delete({
+      where: {
+        id,
+      },
+    });
   });
 };
 
