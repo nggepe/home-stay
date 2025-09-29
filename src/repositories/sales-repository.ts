@@ -53,7 +53,6 @@ export const createSales = async (data: CreateSalesProps) => {
 };
 
 export const updateSales = async (id: number, data: CreateSalesProps) => {
-  const code = await generateNewCode();
   await Database.$transaction(async (trx) => {
     await trx.sales_line.deleteMany({
       where: {
@@ -68,7 +67,6 @@ export const updateSales = async (id: number, data: CreateSalesProps) => {
     await trx.sales.update({
       where: { id: id },
       data: {
-        code,
         bookedAt: data.bookedAt,
         createdAt: new Date(),
         customerId: data.customerId,
@@ -146,18 +144,14 @@ export const deleteSales = async (id: number) => {
 };
 
 export const generateNewCode = async () => {
-  const code = await Database.sales.findFirst({
-    select: {
-      code: true,
-    },
-    orderBy: {
-      id: 'desc',
-    },
-  });
-  if (!code) {
+  const sales: { code: string }[] =
+    await Database.$queryRaw`SELECT code FROM sales ORDER BY CAST(code AS INTEGER) DESC LIMIT 1`;
+
+  if (sales.length === 0) {
     return '1'.padStart(4, '0');
   }
-  const newCode = String(Number(code.code) + 1).padStart(4, '0');
+  const lastCode = sales[0].code;
+  const newCode = String(Number(lastCode) + 1).padStart(4, '0');
   return newCode;
 };
 
